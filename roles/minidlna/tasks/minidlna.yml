@@ -1,0 +1,10 @@
+- apt:
+    name: "minidlna"
+    state: present
+- blockinfile:
+    path: "/etc/minidlna.conf"
+    block: "{{ lookup('file', 'minidlna.conf') }}"    
+- service:
+    name: "minidlna"
+    state: started
+    enabled: yes

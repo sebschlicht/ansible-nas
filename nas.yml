@@ -1,0 +1,9 @@
+---
+- name: Install Samba, required utils, miniDLNA and ownCloud
+  hosts: pis
+  become: yes
+  user: pi
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - minidlna
