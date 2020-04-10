@@ -1,2 +1,2 @@
-- name: Install miniDLNA
+- name: Setup miniDLNA
   import_tasks: minidlna.yml
