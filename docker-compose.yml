@@ -5,3 +5,5 @@ services:
     restart: always
     ports:
       - "49100:22"
+    volumes:
+      - "/media/sebschlicht/hdd_stick:/mnt/nas/primary"
