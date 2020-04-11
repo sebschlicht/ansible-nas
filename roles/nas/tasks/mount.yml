@@ -1,0 +1,7 @@
+- name: mount '{{ mount.name }}'
+  mount:
+    path: "{{ nas.mount_base_dir }}/{{ mount.name }}"
+    src: "{{ mount.device }}"
+    state: mounted
+    fstype: ntfs-3g
+    opts: windows_names,permissions,defaults,noauto,locale=de_DE.utf8
