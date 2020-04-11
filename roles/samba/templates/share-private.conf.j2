@@ -1,0 +1,8 @@
+[{{ user.name }}]
+  path = {{ share.path }}
+  comment = Private share for user '{{ user.name }}'.
+  valid users = {{ user.name }}
+  write list = {{ user.name }}
+  create mask = 0644
+  directory mask = 0755
+  guest ok = no

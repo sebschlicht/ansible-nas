@@ -3,15 +3,8 @@
     name: samba
     state: present
 
-- name: setup NAS user
-  include_tasks: user.yml
-  loop:
-    - "{{ nas.user }}"
-  loop_control:
-    loop_var: user
-
 - name: setup users
   include_tasks: user.yml
-  loop: "{{ samba_users }}"
+  loop: "{{ samba.users }}"
   loop_control:
     loop_var: user

@@ -1,0 +1,10 @@
+[{{ share.name }}]
+  path = {{ share.path }}
+  comment = Semi-Public share for {{ share.label }}.
+  writeable = yes
+  browseable = yes
+  create mask = 0666
+  directory mask = 0777
+  force user = nas
+  force group = nas
+  guest ok = no

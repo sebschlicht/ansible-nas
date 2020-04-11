@@ -1,0 +1,6 @@
+- name: configure {{ share.type }} share '{{ share.name }}'
+  blockinfile:
+    path: /etc/samba/smb.conf
+    block: "{{ lookup('template', 'templates/share-{{ share.type }}.conf.j2') }}"
+    marker: "# {mark} {{ share.type }} share '{{ share.name }}' for user '{{ user.name }}'"
+    validate: testparm -s %s

@@ -10,3 +10,10 @@
 - name: create samba user '{{ user.name }}'
   shell: "(echo {{ user.smbpasswd }}; echo {{ user.smbpasswd }}) | smbpasswd -s -a {{ user.name }}"
   when: not samba_user_exists
+
+- name: configure shares for '{{ user.name }}'
+  include_tasks: share.yml
+  loop: "{{ user.shares }}"
+  loop_control:
+    loop_var: share
+  when: user.shares is defined
