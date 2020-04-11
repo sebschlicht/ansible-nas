@@ -1,2 +1,13 @@
-- name: Setup miniDLNA
-  import_tasks: minidlna.yml
+- name: "Install miniDLNA"
+  apt:
+    name: "minidlna"
+    state: present
+- name: Configure miniDLNA
+  blockinfile:
+    path: "/etc/minidlna.conf"
+    block: "{{ lookup('file', 'minidlna.conf') }}"    
+- name: "Start miniDLNA"
+  service:
+    name: "minidlna"
+    state: started
+    enabled: yes
