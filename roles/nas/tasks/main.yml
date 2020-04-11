@@ -1,0 +1,5 @@
+- name: create system users
+  include_tasks: user.yml
+  loop: "{{ nas_users }}"
+  loop_control:
+    loop_var: user
