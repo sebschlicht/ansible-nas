@@ -1,0 +1,10 @@
+- name: install
+  apt:
+    name: samba
+    state: present
+
+- name: setup users
+  include_tasks: user.yml
+  loop: "{{ samba_users }}"
+  loop_control:
+    loop_var: user
