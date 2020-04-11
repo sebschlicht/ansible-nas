@@ -1,13 +1,13 @@
-- name: "Install miniDLNA"
+- name: install
   apt:
-    name: "minidlna"
+    name: minidlna
     state: present
-- name: Configure miniDLNA
+- name: configure
   blockinfile:
-    path: "/etc/minidlna.conf"
+    path: /etc/minidlna.conf
     block: "{{ lookup('file', 'minidlna.conf') }}"    
-- name: "Start miniDLNA"
+- name: start
   service:
-    name: "minidlna"
+    name: minidlna
     state: started
     enabled: yes
