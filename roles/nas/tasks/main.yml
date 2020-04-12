@@ -1,6 +1,6 @@
 - name: prepare mount point root
   file:
-    path: "{{ nas.mount_base_dir }}"
+    path: "{{ mount_base_dir }}"
     state: directory
     owner: root
     group: root
@@ -14,16 +14,16 @@
 
 - name: mount
   include_tasks: mount.yml
-  loop: "{{ nas.mounts }}"
+  loop: "{{ mounts }}"
   loop_control:
     loop_var: mount
-  when: nas.mounts is defined
+  when: mounts is defined
 
 - name: file permissions
   block:
     - name: file permissions of private shares
       file:
-        path: "{{ nas.mount_base_dir }}/{{ nas.mounts[0].name }}/backup/{{ item.name }}"
+        path: "{{ mount_base_dir }}/{{ mounts[0].name }}/backup/{{ item.name }}"
         state: directory
         owner: "{{ item.user }}"
         group: "{{ item.user }}"
@@ -38,10 +38,10 @@
           user: mas
     - name: file permissions of public shares
       file:
-        path: "{{ nas.mount_base_dir }}/{{ nas.mounts[0].name }}/{{ item }}"
+        path: "{{ mount_base_dir }}/{{ mounts[0].name }}/{{ item }}"
         state: directory
-        owner: nas
-        group: nas
+        owner: "{{ nas_user.name }}"
+        group: "{{ nas_user.name }}"
         recurse: yes
       loop:
         - secdev

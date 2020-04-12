@@ -1,6 +1,6 @@
-- name: create UNIX user '{{ nas.user.name }}'
+- name: create UNIX user '{{ nas_user.name }}'
   user:
-    name: "{{ nas.user.name }}"
+    name: "{{ nas_user.name }}"
 
 - name: create UNIX user 'sebschlicht'
   user:

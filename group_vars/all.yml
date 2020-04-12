@@ -1,21 +1,12 @@
-nas:
-  user:
-    name: nas
-    password: nas
-    smbpasswd: smbnas
-  mount_base_dir: /mnt/nas
-  mounts:
-    - name: primary
-    - name: secondary
-  users:
-    - name: sebschlicht
-      password: test
-      smbpasswd: smbtest
-    - name: isspek
-      password: test2
-      smbpasswd: smbtest2
-    - name: mas
-      password: test3
-      smbpasswd: smbtest3
-samba:
-  users: "[{{ nas.user }}] + {{ nas.users }}"
+nas_user:
+  name: nas
+users:
+  - name: sebschlicht
+    password: test
+    smbpasswd: smbtest
+  - name: isspek
+    password: test2
+    smbpasswd: smbtest2
+  - name: mas
+    password: test3
+    smbpasswd: smbtest3
