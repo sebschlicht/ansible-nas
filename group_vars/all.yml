@@ -3,7 +3,10 @@ nas_user:
 users:
   - name: sebschlicht
     smbpasswd: smbtest
+    smbdir: sebastian
   - name: isspek
     smbpasswd: smbtest
+    smbdir: ipek
   - name: mas
     smbpasswd: smbtest
+    smbdir: andrea-michael

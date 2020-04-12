@@ -20,19 +20,16 @@
   block:
     - name: file permissions of private shares
       file:
-        path: "{{ mount_base_dir }}/{{ mounts[0].name }}/backup/{{ item.name }}"
+        path: "{{ mount_base_dir }}/{{ mounts[0].name }}/backup/{{ user.smbdir }}"
         state: directory
-        owner: "{{ item.user }}"
-        group: "{{ item.user }}"
+        owner: "{{ user.name }}"
+        group: "{{ user.name }}"
         mode: '700'
         recurse: yes
-      loop:
-        - name: sebastian
-          user: sebschlicht
-        - name: ipek
-          user: isspek
-        - name: andrea-michael
-          user: mas
+      loop: "{{ users }}"
+      loop_control:
+        loop_var: user
+
     - name: file permissions of public shares
       file:
         path: "{{ mount_base_dir }}/{{ mounts[0].name }}/{{ item }}"
