@@ -1,6 +1,6 @@
 ---
 - name: Install Samba, required utils, miniDLNA and ownCloud
-  hosts: pis
+  hosts: dev
   become: yes
   user: pi
   vars:
