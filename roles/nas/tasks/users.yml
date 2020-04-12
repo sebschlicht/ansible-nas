@@ -1,0 +1,19 @@
+- name: create UNIX user '{{ nas.user.name }}'
+  user:
+    name: "{{ nas.user.name }}"
+
+- name: create UNIX user 'sebschlicht'
+  user:
+    name: sebschlicht
+    password: $6$bvWKhsKfYQL8FH$FBXZZLp2ylLIEFjpj6c7vq.pCaJCH3nn3daYG3kEAhfhOxPoE6Y1kIux9VAiTQ8m1BPbmdYQ7OnCJNgm8h9VE1
+    groups: adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi
+
+- name: create UNIX user 'isspek'
+  user:
+    name: isspek
+    password: $6$AupSaBcLM5QMskO$FOVMKV.xMaNlcGsabZEoI7Hdmk9XxVF0bPBbcn2hsUizL0NQeOiIbdtfZGXDowKaP9acY5iDjIp13Y8upcvRr/
+
+- name: create UNIX user 'mas'
+  user:
+    name: mas
+    password: $6$IieSj6WUcNC$Hlw.UkdS0fqoCaGibNLUCp5sCGm/Jb9KSBWOqtyq6QY.rEPuG5sZyjcYeVqQ0IVdssrUqHK4xgteW3f12S9Fa1

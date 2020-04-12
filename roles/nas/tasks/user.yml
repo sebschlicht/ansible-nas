@@ -1,3 +1,0 @@
-- name: create system user '{{ user.name }}'
-  user:
-    name: "{{ user.name }}"

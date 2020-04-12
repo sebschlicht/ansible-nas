@@ -1,0 +1,18 @@
+AllowUsers pi sebschlicht mas
+PermitRootLogin no
+PrintLastLog no
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+
+IgnoreRhosts yes
+RhostsAuthentication no
+RSAAuthentication yes
+
+LoginGraceTime 60
+MaxStartups 2
+AllowTcpForwarding no
+X11Forwarding no
+PermitEmptyPasswords no
+
+ClientAliveInterval 300
+ClientAliveCountMax 0
