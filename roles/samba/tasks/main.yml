@@ -5,7 +5,7 @@
 
 - name: setup users
   include_tasks: user.yml
-  loop: "{{ samba.users }}"
+  loop: "{{ users }}"
   loop_control:
     loop_var: user
 

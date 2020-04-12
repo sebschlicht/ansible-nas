@@ -2,11 +2,8 @@ nas_user:
   name: nas
 users:
   - name: sebschlicht
-    password: test
     smbpasswd: smbtest
   - name: isspek
-    password: test2
-    smbpasswd: smbtest2
+    smbpasswd: smbtest
   - name: mas
-    password: test3
-    smbpasswd: smbtest3
+    smbpasswd: smbtest

@@ -4,10 +4,7 @@
   changed_when: no
   failed_when: "'not found' in samba_user_exists.stdout"
   run_once: yes
-- name: store result
-  set_fact:
-    samba_user_exists: "{{ samba_user_exists.rc == 0 }}"
 
 - name: create samba user '{{ user.name }}'
   shell: "(echo {{ user.smbpasswd }}; echo {{ user.smbpasswd }}) | smbpasswd -s -a {{ user.name }}"
-  when: not samba_user_exists
+  when: "samba_user_exists.rc == 1"
