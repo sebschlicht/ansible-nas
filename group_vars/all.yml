@@ -14,5 +14,8 @@ nas:
     - name: isspek
       password: test2
       smbpasswd: smbtest2
+    - name: mas
+      password: test3
+      smbpasswd: smbtest3
 samba:
   users: "[{{ nas.user }}] + {{ nas.users }}"
