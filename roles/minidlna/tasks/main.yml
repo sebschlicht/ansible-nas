@@ -2,10 +2,12 @@
   apt:
     name: minidlna
     state: present
+
 - name: configure
   blockinfile:
     path: /etc/minidlna.conf
     block: "{{ lookup('file', 'minidlna.conf') }}"    
+
 - name: start
   service:
     name: minidlna
