@@ -5,3 +5,4 @@
     state: mounted
     fstype: ntfs-3g
     opts: windows_names,permissions,defaults,noauto,locale=de_DE.utf8
+  when: "mount.device is defined"
