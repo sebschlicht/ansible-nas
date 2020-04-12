@@ -1,7 +1,7 @@
 version: "3.6"
 services: 
   worker:
-    build: ./docker
+    build: .
     restart: always
     ports:
       - "49100:22"
