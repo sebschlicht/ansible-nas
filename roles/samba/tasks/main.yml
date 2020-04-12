@@ -14,3 +14,9 @@
     path: /etc/samba/smb.conf
     block: "{{ lookup('file', 'smb.conf') }}"
     validate: testparm -s %s
+
+- name: start
+  service:
+    name: smbd
+    state: started
+    enabled: no

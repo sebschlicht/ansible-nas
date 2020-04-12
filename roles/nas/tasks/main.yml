@@ -5,11 +5,12 @@
 - name: prepare mount point root
   file:
     path: "{{ nas.mount_base_dir }}"
+    state: directory
     owner: root
     group: root
     mode: "755"
 
-- name: create system users
+- name: create UNIX users
   include_tasks: user.yml
   loop: "{{ nas.users }}"
   loop_control:
@@ -21,3 +22,38 @@
   loop_control:
     loop_var: mount
   when: nas.mounts is defined
+
+- name: copy test files
+  copy:
+    src: files/backup
+    dest: /mnt/nas/primary/
+  when: "copy_test_files"
+
+- name: file permissions
+  block:
+    - name: file permissions of private shares
+      file:
+        path: "{{ nas.mount_base_dir }}/{{ nas.mounts[0].name }}/backup/{{ item.name }}"
+        state: directory
+        owner: "{{ item.user }}"
+        group: "{{ item.user }}"
+        mode: '700'
+        recurse: yes
+      loop:
+        - name: sebastian
+          user: sebschlicht
+        - name: ipek
+          user: isspek
+        - name: andrea-michael
+          user: mas
+    - name: file permissions of public shares
+      file:
+        path: "{{ nas.mount_base_dir }}/{{ nas.mounts[0].name }}/{{ item }}"
+        state: directory
+        owner: nas
+        group: nas
+        recurse: yes
+      loop:
+        - secdev
+        - software
+        - videos
