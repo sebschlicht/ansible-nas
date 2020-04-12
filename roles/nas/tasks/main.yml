@@ -9,9 +9,6 @@
 - name: create UNIX users
   include_tasks: users.yml
 
-- name: setup SSH server
-  include_tasks: sshd.yml
-
 - name: mount
   include_tasks: mount.yml
   loop: "{{ mounts }}"

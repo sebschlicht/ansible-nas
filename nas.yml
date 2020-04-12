@@ -1,11 +1,12 @@
 ---
 - name: Install Samba, required utils, miniDLNA and ownCloud
-  hosts: dev
+  hosts: ref
   become: yes
   user: pi
   vars:
     ansible_python_interpreter: /usr/bin/python3
   roles:
     - nas
+    - sshd
     - samba
     - minidlna
