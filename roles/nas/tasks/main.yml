@@ -30,7 +30,6 @@
         owner: "{{ user.name }}"
         group: "{{ user.name }}"
         mode: 0700
-        recurse: yes
       loop: "{{ users }}"
       loop_control:
         loop_var: user
@@ -41,7 +40,7 @@
         state: directory
         owner: "{{ nas_user.name }}"
         group: "{{ nas_user.name }}"
-        recurse: yes
+        mode: 0777
       loop:
         - secdev
         - software
