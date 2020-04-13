@@ -1,1 +1,3 @@
 mail_pass: "{{ vault_mail_pass }}"
+nas:
+  hostname: pi

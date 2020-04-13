@@ -52,3 +52,6 @@
 
 - name: setup unattended upgrades
   include_tasks: upgrades.yml
+
+- name: set hostname
+  include_tasks: hostname.yml
