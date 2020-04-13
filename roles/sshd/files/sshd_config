@@ -2,6 +2,7 @@ AllowUsers pi sebschlicht mas
 PermitRootLogin no
 PrintLastLog no
 PasswordAuthentication no
+UsePAM no
 ChallengeResponseAuthentication no
 
 IgnoreRhosts yes
