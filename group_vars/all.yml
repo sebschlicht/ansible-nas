@@ -1,5 +1,3 @@
-nas_user:
-  name: nas
 users:
   - name: sebschlicht
     smbpasswd: smbtest

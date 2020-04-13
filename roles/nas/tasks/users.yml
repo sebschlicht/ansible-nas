@@ -3,9 +3,9 @@
     name: pi
     password: $6$bvWKhsKfYQL8FH$FBXZZLp2ylLIEFjpj6c7vq.pCaJCH3nn3daYG3kEAhfhOxPoE6Y1kIux9VAiTQ8m1BPbmdYQ7OnCJNgm8h9VE1
 
-- name: create UNIX user '{{ nas_user.name }}'
+- name: create UNIX user '{{ nas.user.name }}'
   user:
-    name: "{{ nas_user.name }}"
+    name: "{{ nas.user.name }}"
 
 - name: create UNIX user 'sebschlicht'
   user:

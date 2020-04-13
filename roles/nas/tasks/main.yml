@@ -38,8 +38,8 @@
       file:
         path: "{{ mount_base_dir }}/{{ mounts[0].name }}/{{ item }}"
         state: directory
-        owner: "{{ nas_user.name }}"
-        group: "{{ nas_user.name }}"
+        owner: "{{ nas.user.name }}"
+        group: "{{ nas.user.name }}"
         mode: 0777
       loop:
         - secdev
