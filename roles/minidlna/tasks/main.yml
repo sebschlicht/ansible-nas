@@ -8,6 +8,11 @@
     path: /etc/minidlna.conf
     block: "{{ lookup('file', 'minidlna.conf') }}"    
 
+- name: configure user access
+  user:
+    name: minidlna
+    groups: "{{ nas.user.name }}"
+
 - name: start
   service:
     name: minidlna
