@@ -5,6 +5,7 @@
   loop:
     - ssmtp
     - mailutils
+  tags: [ nas, mail, auto-upgrade ]
 
 - name: mailing - configure
   blockinfile:
@@ -14,6 +15,7 @@
       AuthUser=pi-ko@sschlicht.de
       AuthPass={{ mail_pass }}
       UseTLS=Yes
+  tags: [ nas, mail, auto-upgrade ]
 
 - name: mailing - configure alias
   blockinfile:
@@ -21,7 +23,9 @@
     block: |
       root:pi-ko@sschlicht.de:mx2f3e.netcup.net:465
   register: alias
+  tags: [ nas, mail, auto-upgrade ]
 
 - name: mailing - configure root name (mail sender)
   shell: chfn -f "Pi (Koblenz)" root
   when: alias.changed
+  tags: [ nas, mail, auto-upgrade ]

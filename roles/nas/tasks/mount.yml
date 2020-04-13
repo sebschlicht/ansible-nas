@@ -6,3 +6,4 @@
     fstype: ntfs-3g
     opts: windows_names,permissions,defaults,noauto,locale=de_DE.utf8
   when: "mount.uuid is defined"
+  tags: nas

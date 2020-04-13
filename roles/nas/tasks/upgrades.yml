@@ -5,6 +5,7 @@
   loop:
     - unattended-upgrades
     - apt-listchanges
+  tags: [ nas, auto-upgrade ]
 
 - name: unattended upgrades - configure
   blockinfile:
@@ -14,6 +15,7 @@
     - apt.conf.d/50unattended-upgrades
     - apt.conf.d/20auto-upgrades
     - listchanges.conf
+  tags: [ nas, auto-upgrade ]
 
 - name: unattended upgrades - configure timers
   copy:
@@ -22,3 +24,4 @@
   loop:
     - apt-daily.timer.d
     - apt-daily-upgrade.timer.d
+  tags: [ nas, auto-upgrade ]

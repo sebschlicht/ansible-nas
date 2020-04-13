@@ -2,21 +2,25 @@
   apt:
     name: samba
     state: present
+  tags: samba
 
 - name: setup users
   include_tasks: user.yml
   loop: "{{ users }}"
   loop_control:
     loop_var: user
+  tags: samba
 
 - name: configure
   blockinfile:
     path: /etc/samba/smb.conf
     block: "{{ lookup('file', 'smb.conf') }}"
     validate: testparm -s %s
+  tags: samba
 
 - name: configure service
   service:
     name: smbd
     state: started
     enabled: yes
+  tags: samba

@@ -2,21 +2,25 @@
   apt:
     name: openssh-server
     state: present
+  tags: sshd
 
 - name: copy SSH key for user 'sebschlicht'
   authorized_key:
     user: sebschlicht
     state: present
     key: "{{ lookup('file', 'id_sebschlicht.pub') }}"
+  tags: sshd
 
 - name: configure
   blockinfile:
     block: "{{ lookup('file', 'sshd_config') }}"
     path: /etc/ssh/sshd_config
   register: sshd_config
+  tags: sshd
 
 - name: configure service
   service:
     name: sshd
     state: "{{ 'restarted' if sshd_config.changed else 'started' }}"
     enabled: yes
+  tags: sshd
