@@ -14,3 +14,11 @@
     - apt.conf.d/50unattended-upgrades
     - apt.conf.d/20auto-upgrades
     - listchanges.conf
+
+- name: unattended upgrades - configure timers
+  file:
+    path: "/etc/systemd/system/{{ item }}/override.conf"
+    src: "etc/systemd/system/{{ item }}/override.conf"
+  loop:
+    - apt-daily.timer.d
+    - apt-daily-upgrade.timer.d
