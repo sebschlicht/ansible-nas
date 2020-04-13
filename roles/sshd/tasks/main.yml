@@ -1,3 +1,8 @@
+- name: install
+  apt:
+    name: openssh-server
+    state: present
+
 - name: copy SSH key for user 'sebschlicht'
   authorized_key:
     user: sebschlicht
