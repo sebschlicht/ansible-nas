@@ -7,6 +7,7 @@
     ansible_python_interpreter: /usr/bin/python3
   roles:
     - nas
+    - dynv6
     - sshd
     - samba
     - minidlna

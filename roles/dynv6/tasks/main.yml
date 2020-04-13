@@ -1,0 +1,16 @@
+- name: copy script
+  copy:
+    src: dynv6.sh
+    dest: /usr/local/bin/dynv6
+    mode: 744
+  tags: dynv6
+
+- name: register cronjobs
+  cron:
+    name: "dynv6 ({{ item }})"
+    job: "dynv6 {{ dynv6.token }} {{ dynv6.hostname }}"
+    special_time: "{{ item }}"
+  loop:
+    - hourly
+    - reboot
+  tags: dynv6
