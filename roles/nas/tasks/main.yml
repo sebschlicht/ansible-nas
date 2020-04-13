@@ -9,7 +9,7 @@
     state: directory
     owner: root
     group: root
-    mode: "755"
+    mode: 0755
 
 - name: create UNIX users
   include_tasks: users.yml
@@ -29,7 +29,7 @@
         state: directory
         owner: "{{ user.name }}"
         group: "{{ user.name }}"
-        mode: '700'
+        mode: 0700
         recurse: yes
       loop: "{{ users }}"
       loop_control:
