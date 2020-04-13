@@ -1,0 +1,25 @@
+- name: mailing - install
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ssmtp
+    - mailutils
+
+- name: mailing - configure
+  blockinfile:
+    path: /etc/ssmtp/ssmtp.conf
+    block: |
+      mailhub=mx2f3e.netcup.net:465
+      AuthUser=pi-ko@sschlicht.de
+      AuthPass={{ mail_pass }}
+      UseTLS=Yes
+
+- name: mailing - configure alias
+  blockinfile:
+    path: /etc/ssmtp/revaliases
+    block: |
+      root:pi-ko@sschlicht.de:mx2f3e.netcup.net:465
+
+- name: mailing - configure root name (mail sender)
+  shell: chfn -f "Pi (Koblenz)" root

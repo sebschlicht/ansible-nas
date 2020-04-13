@@ -1,0 +1,16 @@
+- name: unattended upgrades - install
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - unattended-upgrades
+    - apt-listchanges
+
+- name: unattended upgrades - configure
+  blockinfile:
+    path: "/etc/apt/{{ item }}"
+    block: "{{ lookup('file', 'etc/apt/{{ item }}') }}"
+  loop:
+    - apt.conf.d/50unattended-upgrades
+    - apt.conf.d/20auto-upgrades
+    - listchanges.conf

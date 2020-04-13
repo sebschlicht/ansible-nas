@@ -1,3 +1,8 @@
+- name: update apt caches
+  apt:
+    update_cache: yes
+  changed_when: no
+
 - name: prepare mount point root
   file:
     path: "{{ mount_base_dir }}"
@@ -41,3 +46,9 @@
         - secdev
         - software
         - videos
+
+- name: setup mail-based notifications
+  include_tasks: mailing.yml
+
+- name: setup unattended upgrades
+  include_tasks: upgrades.yml
