@@ -4,6 +4,10 @@
   changed_when: no
   tags: nas
 
+- name: setup firewall
+  include_tasks: firewall.yml
+  tags: nas
+
 - name: prepare mount point root
   file:
     path: "{{ mount_base_dir }}"
