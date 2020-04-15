@@ -1,14 +1,14 @@
 - name: copy script
-  copy:
-    src: dynv6.sh
+  template:
+    src: dynv6.sh.j2
     dest: /usr/local/bin/dynv6
-    mode: 744
+    mode: 0755
   tags: dynv6
 
 - name: register cronjobs
   cron:
     name: "dynv6 ({{ item }})"
-    job: "dynv6 {{ dynv6.token }} {{ dynv6.hostname }}"
+    job: "dynv6 {{ dynv6.hostname }}"
     special_time: "{{ item }}"
   loop:
     - hourly

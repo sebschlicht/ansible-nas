@@ -15,6 +15,8 @@
   blockinfile:
     block: "{{ lookup('file', 'sshd_config') }}"
     path: /etc/ssh/sshd_config
+    validate: /usr/sbin/sshd -t -f %s
+    backup: yes
   register: sshd_config
   tags: sshd
 
