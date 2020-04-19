@@ -8,7 +8,10 @@
   authorized_key:
     user: sebschlicht
     state: present
-    key: "{{ lookup('file', 'id_sebschlicht.pub') }}"
+    key: "{{ lookup('file', '{{ item }}') }}"
+  loop:
+    - id_sebschlicht.pub
+    - id_pi_windows.pub
   tags: sshd
 
 - name: configure
