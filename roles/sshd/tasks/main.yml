@@ -2,7 +2,7 @@
   apt:
     name: openssh-server
     state: present
-  tags: sshd
+  tags: [ sshd, nas ]
 
 - name: copy SSH key for user 'sebschlicht'
   authorized_key:
@@ -12,7 +12,7 @@
   loop:
     - id_sebschlicht.pub
     - id_pi_windows.pub
-  tags: sshd
+  tags: [ sshd, nas ]
 
 - name: configure
   blockinfile:
@@ -21,11 +21,11 @@
     validate: /usr/sbin/sshd -t -f %s
     backup: yes
   register: sshd_config
-  tags: sshd
+  tags: [ sshd, nas ]
 
 - name: configure service
   service:
     name: sshd
     state: "{{ 'restarted' if sshd_config.changed else 'started' }}"
     enabled: yes
-  tags: sshd
+  tags: [ sshd, nas ]
