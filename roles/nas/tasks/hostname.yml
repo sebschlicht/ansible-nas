@@ -2,14 +2,9 @@
   hostname:
     name: "{{ nas.hostname }}"
   when: "ansible_fqdn != nas.hostname"
-  register: hostname
-  tags: nas
 
 - name: hostname - update hosts file
   lineinfile:
     dest: /etc/hosts
-    line: "127.0.1.1\tpi"
+    line: "127.0.1.1\t{{ nas.hostname }}"
     regexp: "^127.0.1.1"
-    state: present
-  when: hostname.changed
-  tags: nas

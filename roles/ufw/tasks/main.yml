@@ -1,0 +1,26 @@
+- name: firewall - install
+  apt:
+    name: ufw
+    cache_valid_time: 600
+
+- name: firewall - configure defaults
+  ufw:
+    default: "{{ item.default | default(omit) }}"
+    direction: "{{ item.direction | default(omit) }}"
+  with_items:
+    - default: deny
+      direction: incoming
+    - default: allow
+      direction: outgoing
+    
+- name: firewall - configure OpenSSH
+  ufw:
+    rule: limit
+    name: OpenSSH
+  tags: sshd
+
+- name: firewall - (re)start service
+  service:
+    name: ufw
+    state: reloaded
+    enabled: yes

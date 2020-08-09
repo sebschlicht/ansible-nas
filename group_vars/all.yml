@@ -1,10 +1,64 @@
+setup_user: pi
+
+nas:
+  hostname: pi
+  user:
+    name: nas
+  mount_base_dir: /mnt/nas
+  mounts:
+    primary:
+      name: primary
+      uuid: 18A302FC66F67B28
+
+unattended_upgrades:
+  notification_mail_recipient: pimon@sschlicht.de
+
+mailing:
+  server: mx2f3e.netcup.net:465
+  user: pi-ko@sschlicht.de
+  address: pi-ko@sschlicht.de
+  password: "{{ vault_mailing_password }}"
+  sender_name: "Pi (Koblenz)"
+
+samba:
+  internal_shares:
+    - { name: videos, path: /mnt/nas/primary/videos }
+    - { name: secdev, path: /mnt/nas/primary/secdev }
+  public_shares:
+    - { name: software, path: /mnt/nas/primary/software }
+
+minidlna:
+  display_name: SchlichtNAS
+  directories:
+    - /mnt/nas/primary/videos
+
+dynv6:
+  hostname: koblenz.dns.sschlicht.de
+  token: "{{ vault_dynv6_token }}"
+
+sshd:
+  allow_users:
+    - "{{ setup_user }}"
+
 users:
   - name: sebschlicht
-    smbpasswd: smbtest
-    smbdir: sebastian
+    backup_folder_name: sebastian
+    initial_password: $6$bvWKhsKfYQL8FH$FBXZZLp2ylLIEFjpj6c7vq.pCaJCH3nn3daYG3kEAhfhOxPoE6Y1kIux9VAiTQ8m1BPbmdYQ7OnCJNgm8h9VE1
+    groups: sudo
+    samba:
+      password: "{{ vault_sebschlicht_smbpasswd }}"
+    authorized_keys:
+      - id_sebschlicht.pub
+      - id_pi_windows.pub
   - name: isspek
-    smbpasswd: smbtest
-    smbdir: ipek
+    backup_folder_name: ipek
+    initial_password: $6$AupSaBcLM5QMskO$FOVMKV.xMaNlcGsabZEoI7Hdmk9XxVF0bPBbcn2hsUizL0NQeOiIbdtfZGXDowKaP9acY5iDjIp13Y8upcvRr/
+    samba:
+      password: "{{ vault_isspek_smbpasswd }}"
   - name: mas
-    smbpasswd: smbtest
-    smbdir: andrea-michael
+    backup_folder_name: andrea-michael
+    initial_password: $6$IieSj6WUcNC$Hlw.UkdS0fqoCaGibNLUCp5sCGm/Jb9KSBWOqtyq6QY.rEPuG5sZyjcYeVqQ0IVdssrUqHK4xgteW3f12S9Fa1
+    samba:
+      password: "{{ vault_mas_smbpasswd }}"
+
+running_in_container: no

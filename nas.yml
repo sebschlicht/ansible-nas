@@ -1,13 +1,21 @@
 ---
-- name: Install Samba, required utils, miniDLNA and ownCloud
-  hosts: ref
+- name: Setup the Network Access Storage (NAS)
+  hosts: nas
+  remote_user: "{{ setup_user }}"
   become: yes
-  user: pi
   vars:
     ansible_python_interpreter: /usr/bin/python3
   roles:
-    - nas
-    - dynv6
-    - sshd
-    - samba
-    - minidlna
+    - role: nas
+      tags: nas
+    - role: sshd
+      tags: sshd
+    - role: dynv6
+      tags: dyndns
+    - role: samba
+      tags: smb
+    - role: minidlna
+      tags: dlna
+    - role: ufw
+      when: not running_in_container
+      tags: firewall

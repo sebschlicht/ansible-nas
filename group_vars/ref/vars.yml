@@ -1,8 +1,0 @@
-mail_pass: "{{ vault_mail_pass }}"
-nas:
-  user:
-    name: nas
-  hostname: pi
-dynv6:
-  token: "{{ vault_dynv6_token }}"
-  hostname: koblenz.dns.sschlicht.de

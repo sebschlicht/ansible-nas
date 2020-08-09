@@ -1,31 +1,12 @@
-- name: install
-  apt:
-    name: openssh-server
-    state: present
-  tags: [ sshd, nas ]
-
-- name: copy SSH key for user 'sebschlicht'
-  authorized_key:
-    user: sebschlicht
-    state: present
-    key: "{{ lookup('file', '{{ item }}') }}"
-  loop:
-    - id_sebschlicht.pub
-    - id_pi_windows.pub
-  tags: [ sshd, nas ]
+- name: "copy SSH keys"
+  include_tasks: ssh_id_copy.yml
+  with_items: "{{ users }}"
+  loop_control:
+    loop_var: user
 
 - name: configure
   blockinfile:
-    block: "{{ lookup('file', 'sshd_config') }}"
+    block: "{{ lookup('template', 'sshd_config.j2') }}"
     path: /etc/ssh/sshd_config
     validate: /usr/sbin/sshd -t -f %s
     backup: yes
-  register: sshd_config
-  tags: [ sshd, nas ]
-
-- name: configure service
-  service:
-    name: sshd
-    state: "{{ 'restarted' if sshd_config.changed else 'started' }}"
-    enabled: yes
-  tags: [ sshd, nas ]

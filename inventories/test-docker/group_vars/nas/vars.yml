@@ -1,0 +1,16 @@
+nas:
+  hostname: pi
+  user:
+    name: pi
+  mount_base_dir: /mnt/nas
+  mounts:
+    primary:
+      name: primary
+      # omit UUID to refer to local directory
+
+sshd:
+  enable_password_authentication: yes
+  allow_users:
+    - "{{ setup_user }}"
+
+running_in_container: yes
