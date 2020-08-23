@@ -1,7 +1,7 @@
-AllowUsers pi sebschlicht mas
+AllowUsers {{ sshd.allow_users | union(users | map(attribute='name') | list) | unique | join(' ') }}
 PermitRootLogin no
 PrintLastLog no
-PasswordAuthentication no
+PasswordAuthentication {{ 'yes' if (sshd.enable_password_authentication | default('false') | bool) else 'no' }}
 UsePAM no
 ChallengeResponseAuthentication no
 

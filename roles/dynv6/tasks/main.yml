@@ -1,11 +1,16 @@
+- name: install cron
+  apt:
+    name: cron
+    cache_valid_time: 600
+
 - name: copy script
   template:
     src: dynv6.sh.j2
     dest: /usr/local/bin/dynv6
     mode: 0755
-  tags: dynv6
 
-- name: register cronjobs
+- name: register cron jobs
+  become_user: "{{ nas.user.name }}"
   cron:
     name: "dynv6 ({{ item }})"
     job: "dynv6 {{ dynv6.hostname }}"
@@ -13,4 +18,3 @@
   loop:
     - hourly
     - reboot
-  tags: dynv6

@@ -1,26 +1,32 @@
 - name: install
   apt:
     name: samba
-    state: present
-  tags: samba
+    cache_valid_time: 600
+
+- name: ensure proper ownership for internal and public share roots
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ nas.user.name }}"
+    group: "{{ nas.user.name }}"
+    mode: 0770
+    force: yes
+  with_items: "{{ (samba.internal_shares | default([])) | union(samba.public_shares | default([])) }}"
 
 - name: setup users
   include_tasks: user.yml
   loop: "{{ users }}"
   loop_control:
     loop_var: user
-  tags: samba
 
 - name: configure
   blockinfile:
     path: /etc/samba/smb.conf
-    block: "{{ lookup('file', 'smb.conf') }}"
+    block: "{{ lookup('template', 'smb.conf.j2') }}"
     validate: testparm -s %s
-  tags: samba
 
 - name: configure service
   service:
     name: smbd
     state: started
     enabled: yes
-  tags: samba

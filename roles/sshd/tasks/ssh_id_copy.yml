@@ -1,0 +1,6 @@
+- name: "copy SSH keys for user '{{ user.name }}'"
+  authorized_key:
+    user: "{{ user.name }}"
+    key: "{{ lookup('file', '{{ item }}') }}"
+  with_items: "{{ user.authorized_keys }}"
+  when: user.authorized_keys is defined and (user.authorized_keys | length > 0)

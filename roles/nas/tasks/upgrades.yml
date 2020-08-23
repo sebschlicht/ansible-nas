@@ -1,21 +1,16 @@
 - name: unattended upgrades - install
   apt:
-    name: "{{ item }}"
-    state: present
-  loop:
-    - unattended-upgrades
-    - apt-listchanges
-  tags: [ nas, auto-upgrade ]
+    name: unattended-upgrades,apt-listchanges
+    cache_valid_time: 600
 
 - name: unattended upgrades - configure
   blockinfile:
-    path: "/etc/apt/{{ item }}"
-    block: "{{ lookup('file', 'etc/apt/{{ item }}') }}"
+    path: "/etc/apt/{{ item.path }}"
+    block: "{{ lookup(item.type, 'etc/apt/{{ item.path }}{{ item.local_path_suffix | default('') }}') }}"
   loop:
-    - apt.conf.d/50unattended-upgrades
-    - apt.conf.d/20auto-upgrades
-    - listchanges.conf
-  tags: [ nas, auto-upgrade ]
+    - { path: apt.conf.d/50unattended-upgrades, type: template, local_path_suffix: .j2 }
+    - { path: apt.conf.d/20auto-upgrades, type: file }
+    - { path: listchanges.conf, type: template, local_path_suffix: .j2 }
 
 - name: unattended upgrades - configure timers
   copy:
@@ -24,4 +19,3 @@
   loop:
     - apt-daily.timer.d
     - apt-daily-upgrade.timer.d
-  tags: [ nas, auto-upgrade ]
