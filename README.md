@@ -128,7 +128,7 @@ Variable | Description
 `nas.hostname`          | desired hostname of the NAS
 `nas.user.name`         | name of the artificial NAS user that is used for service tasks (will be created if missing)
 `nas.mount_base_dir`    | directory for mount points of external storage devices
-`nas.mounts.primary`    | primary location of the NAS data, specified as a folder `name` within the mount point directory. if a `uuid` is specified, the respective device will be mounted to that folder
+`nas.mounts.primary`    | primary location of the NAS data, specified as a folder `name` within the mount point directory. if a `uuid` is specified, the respective device will be mounted to that folder. use `fstype` and `opts` to specify the filesystem and options of the mount (defaults fit NTFS-formatted drives)
 `nas.mounts.secondary`  | optional secondary location of the NAS data, that the primary location will be mirrored to
 `mailing.*`             | `server`, `user` name, `address`, `password` and `sender_name` for the mail account to be used for sending notifications
 `unattended_upgrades.notification_mail_recipient` | recipient for summary mails of performed unattended upgrades
