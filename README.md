@@ -40,7 +40,7 @@ If tags are ommitted, however, all roles will be used and hence all features wil
 
 The following tags are available:
 
-* `nas`:
+* `nas`
   
   The basic role of this playbook.
 
@@ -48,41 +48,41 @@ The following tags are available:
 
   *Note*: For maximum compatiblity and convenience, these devices are assumed to be NTFS-formatted.
 
-* `mailing`:
+* `mailing`
 
   Configures a mail account for the `root` user, to allow for mail-based notifications.
 
-* `auto-upgrade`:
+* `auto-upgrade`
 
   Configures unattended upgrades, using mail-based notifications.
 
   Thus, this tag can only be used together with  `mailing`.
 
-* `sshd`:
+* `sshd`
 
   Hardens the SSH server and configures passwordless SSH access to the target machine for all NAS users.
   You can configure to also allow password-based authentication, if you need to.
 
-* `dyndns`:
+* `dyndns`
 
   Configures the NAS to automatically update the dynamic DNS record.
   In this case, the update script of DynV6 is placed on the NAS and scheduled to report your public IP address to DynV6 whenever the system reboots or an hour has passed.
 
   *Note*: Due to the script's implementation, the IP address will not be reported until it has actually changed.
 
-* `dlna`:
+* `dlna`
 
   Installs and configures a miniDLNA server to serve DLNA clients such as SmartTVs.
 
   Use the configuration to specify the media folders with videos/music/pictures that should be made available to clients.
 
-* `samba`:
+* `smb`
 
   Installs and configures a Samba server on the NAS, to allow users to access their backup folders (and others) from any device.
 
   Use the configuration to specify a Samba password for each NAS user.
 
-* `firewall`:
+* `firewall`
 
   Installs the firewall `ufw` to protect your NAS against bots and other threats.
 
