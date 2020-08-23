@@ -24,6 +24,14 @@
     loop_var: mount
   when: nas.mounts is defined
 
+- name: configure mirroring to secondary storage
+  cron:
+    name: "mirror NAS storages"
+    job: "rsync -ast --delete {{ nas.mount_base_dir }}/{{ nas.mounts.primary.name }} {{ nas.mount_base_dir }}/{{ nas.mounts.secondary.name }}"
+    special_time: daily
+  become_user: "{{ nas.user }}"
+  when: nas.mounts.secondary is defined
+
 - name: create primary backup directory layout
   file:
     path: "{{ nas.mount_base_dir }}/{{ nas.mounts.primary.name }}/backup"
