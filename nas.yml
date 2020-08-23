@@ -17,5 +17,4 @@
     - role: minidlna
       tags: dlna
     - role: ufw
-      when: not running_in_container
       tags: firewall
