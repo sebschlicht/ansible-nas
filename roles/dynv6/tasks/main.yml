@@ -1,8 +1,3 @@
-- name: install cron
-  apt:
-    name: cron
-    cache_valid_time: 600
-
 - name: copy script
   template:
     src: dynv6.sh.j2

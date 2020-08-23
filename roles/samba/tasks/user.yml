@@ -1,4 +1,4 @@
-- name: check user '{{ user.name }}'
+- name: check for user '{{ user.name }}'
   shell: "pdbedit -L | grep '^{{ user.name }}:'"
   register: samba_user_exists
   changed_when: no
