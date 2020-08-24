@@ -5,11 +5,11 @@
     mode: 0755
 
 - name: register cron jobs
-  become_user: "{{ nas.user.name }}"
   cron:
     name: "dynv6 ({{ item }})"
     job: "dynv6 {{ dynv6.hostname }}"
     special_time: "{{ item }}"
+    user: "{{ nas.user.name }}"
   loop:
     - hourly
     - reboot
