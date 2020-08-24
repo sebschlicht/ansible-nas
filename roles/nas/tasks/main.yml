@@ -1,10 +1,7 @@
-- name: prepare base mount point
-  file:
-    path: "{{ nas.mount_base_dir }}"
-    state: directory
-    owner: "{{ nas.user.name }}"
-    group: "{{ nas.user.name }}"
-    mode: 0755
+- name: create NAS user
+  user:
+    name: "{{ nas.user.name }}"
+    shell: /sbin/nologin
   tags: nas
 
 - name: create users
@@ -15,6 +12,15 @@
   with_items: "{{ users }}"
   loop_control:
     loop_var: user
+  tags: nas
+
+- name: prepare base mount point
+  file:
+    path: "{{ nas.mount_base_dir }}"
+    state: directory
+    owner: "{{ nas.user.name }}"
+    group: "{{ nas.user.name }}"
+    mode: 0755
   tags: nas
 
 - name: mount external storages
@@ -29,7 +35,7 @@
     name: "mirror NAS storages"
     job: "rsync -ast --delete {{ nas.mount_base_dir }}/{{ nas.mounts.primary.name }} {{ nas.mount_base_dir }}/{{ nas.mounts.secondary.name }}"
     special_time: daily
-  become_user: "{{ nas.user }}"
+    user: "{{ nas.user }}"
   when: nas.mounts.secondary is defined
 
 - name: create primary backup directory layout
