@@ -36,6 +36,12 @@
     - to_port: 1900
       proto: udp
 
+- name: allow HTTP(S) communication
+  ufw:
+    rule: allow
+    proto: tcp
+    to_port: 80,443
+
 - name: enable/reload service
   service:
     name: ufw

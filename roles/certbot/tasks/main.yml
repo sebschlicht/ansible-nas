@@ -5,8 +5,10 @@
   with_items:
     - certbot
     - python-certbot-apache
+  register: certbot_install
 
 # TODO does not certbot create cron entries automatically?
 
-- name: create Apache certificate
+- name: create certificate (Apache)
   shell: "certbot -n --apache --agree-tos -m '{{ certbot.contact_mail_address }}' --domains '{{ certbot.domain }}'"
+  when: certbot_install.changed
