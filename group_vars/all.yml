@@ -2,6 +2,7 @@ setup_user: pi
 
 nas:
   hostname: pi
+  domain: koblenz.dns.sschlicht.de
   user:
     name: nas
   mount_base_dir: /mnt/nas
@@ -20,6 +21,10 @@ mailing:
   password: "{{ vault_mailing_password }}"
   sender_name: "Pi (Koblenz)"
 
+nextcloud:
+  version: 20.0.0
+  path: /opt/nextcloud
+
 samba:
   internal_shares:
     - { name: videos, path: /mnt/nas/primary/videos }
@@ -33,7 +38,6 @@ minidlna:
     - /mnt/nas/primary/videos
 
 dynv6:
-  hostname: koblenz.dns.sschlicht.de
   token: "{{ vault_dynv6_token }}"
 
 sshd:

@@ -18,3 +18,5 @@
       tags: dlna
     - role: ufw
       tags: firewall
+    - role: nextcloud
+      tags: cloud

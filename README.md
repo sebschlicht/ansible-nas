@@ -82,6 +82,12 @@ The following tags are available:
 
   Use the configuration to specify a Samba password for each NAS user.
 
+* `cloud`
+
+  Installs and configures a Nextcloud instance of the NAS, to allow users to store files in a private cloud.
+
+  Use the configuration to specify a Nextcloud password for each NAS user.
+
 * `firewall`
 
   Installs the firewall `ufw` to protect your NAS against bots and other threats.
@@ -126,6 +132,7 @@ Variable | Description
 -------- | -----------
 `setup_user`            | remote user to login and use for the setup process
 `nas.hostname`          | desired hostname of the NAS
+`nas.domain`            | public domain for the NAS device (e.g. when hosting a Nextcloud)
 `nas.user.name`         | name of the artificial NAS user that is used for service tasks (will be created if missing)
 `nas.mount_base_dir`    | directory for mount points of external storage devices
 `nas.mounts.primary`    | primary location of the NAS data, specified as a folder `name` within the mount point directory. if a `uuid` is specified, the respective device will be mounted to that folder. use `fstype` and `opts` to specify the filesystem and options of the mount (defaults fit NTFS-formatted drives)
@@ -135,7 +142,7 @@ Variable | Description
 `sshd.allow_users`      | list of users that are allowed to SSH into the NAS, besides the individual users
 `sshd.enable_password_authentication` | flag to enable password-based authentication for SSH clients (default: `false`)
 `users`                 | list of individual NAS users, each having a user `name`, an `initial_password` and a `samba.password` (if this feature is used). you may also specify a `backup_folder_name` (defaults to username) and additional group assignments (`groups`). you may as well specify a list of `authorized_keys` for passwordless SSH access. if no keys have been specified, the user won't be able to connect via SSH unless the password authentication is enabled
-`dynv6.*`               | `hostname` and `token` to propagate the current IP address to DynV6
+`dynv6.token`           | token to update the current IP address of the NAS domain on DynV6
 `minidlna.*`            | `display_name` to be shown in client devices, `directories` to list paths that should be accessible for clients
 `samba.internal_shares` | internal Samba shares, each having a `name` and a `path`, that are accessible with any account
 `samba.public_shares`   | public Samba shares, each having a `name` and a `path`, that are accessible even without an account
