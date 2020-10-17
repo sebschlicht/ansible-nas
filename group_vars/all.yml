@@ -11,8 +11,10 @@ nas:
       name: primary
       uuid: 18A302FC66F67B28
 
+mail_recipient: pimon@sschlicht.de
+
 unattended_upgrades:
-  notification_mail_recipient: pimon@sschlicht.de
+  notification_mail_recipient: "{{ mail_recipient }}"
 
 mailing:
   server: mx2f3e.netcup.net:465
