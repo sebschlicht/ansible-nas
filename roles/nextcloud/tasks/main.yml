@@ -1,0 +1,12 @@
+- name: prepare installation directory
+  file:
+    path: "{{ nextcloud.path }}"
+    state: directory
+  register: nextcloud_path
+
+- name: download and extract
+  unarchive:
+    src: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud.version }}.tar.bz2"
+    remote_src: yes
+    dest: "{{ nextcloud.path }}"
+  when: nextcloud_path.changed
