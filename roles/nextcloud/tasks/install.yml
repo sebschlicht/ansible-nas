@@ -1,0 +1,35 @@
+- name: create installation directory
+  file:
+    path: "{{ nextcloud.path }}"
+    state: directory
+  register: nextcloud_installation_path  
+
+- name: download
+  get_url:
+    url: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud.version }}.tar.bz2"
+    dest: "{{ nextcloud_archive_path }}"
+  register: nextcloud_download
+  when: nextcloud_installation_path.changed
+
+- name: extract
+  shell: 'tar -xf "{{ nextcloud_archive_path }}" -C "{{ nextcloud.path }}" --strip 1'
+  when: nextcloud_installation_path.changed
+
+- name: set Nextcloud file permissions
+  file:
+    path: "{{ nextcloud.path }}"
+    owner: www-data
+    group: www-data
+    mode: "u=rw,g=r,o=,a-x+X"
+    recurse: yes
+
+- name: set base folder permissions
+  file:
+    path: "{{ nextcloud.path }}"
+    owner: root
+    group: www-data
+    mode: 0750
+
+# TODO create missing folders (due to base folder permissions)
+# TODO set x flag for occ
+# TODO check for an idempotent solution

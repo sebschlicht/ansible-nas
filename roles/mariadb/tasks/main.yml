@@ -1,0 +1,11 @@
+- name: install
+  apt:
+    name: "{{ item }}"
+    cache_valid_time: 600
+  with_items:
+    - mariadb-server
+    - python3-mysqldb # required only for managing the database via Ansible
+  register: mariadb_install
+
+- name: secure the installation
+  import_tasks: secure_installation.yml

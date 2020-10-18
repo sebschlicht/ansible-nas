@@ -1,0 +1,22 @@
+- name: get enabled Apache mods
+  shell: "apachectl -M | cut -d' ' -f2"
+  changed_when: no
+  register: apache_enabled_mods
+
+- name: enable required Apache mods
+  shell: 'a2enmod {{ item }}'
+  when: not item in apache_enabled_mods.stdout
+  with_items:
+    - rewrite
+    - headers
+    - env
+    - dir
+    - mime
+
+- name: create and enable sites
+  include_tasks: site.yml
+  with_items:
+    - nextcloud.conf
+    - nextcloud-le-ssl.conf
+  loop_control:
+    loop_var: apache_site

@@ -10,5 +10,5 @@
 # TODO does not certbot create cron entries automatically?
 
 - name: create certificate (Apache)
-  shell: "certbot -n --apache --agree-tos -m '{{ certbot.contact_mail_address }}' --domains '{{ certbot.domain }}'"
+  shell: "certbot -n --apache --agree-tos -m '{{ certbot.contact_mail_address }}' -d '{{ certbot.domain }}' --redirect"
   when: certbot_install.changed

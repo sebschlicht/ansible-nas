@@ -25,7 +25,8 @@ mailing:
 
 nextcloud:
   version: 20.0.0
-  path: /opt/nextcloud
+  path: /var/www/nextcloud
+  data_path: /mnt/nas/primary/nextcloud/data
 
 samba:
   internal_shares:

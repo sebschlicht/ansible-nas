@@ -1,0 +1,6 @@
+nextcloud_archive_path: /tmp/nextcloud.tar.bz2
+
+db_root_password: dbtest
+db_user_password: ncdbtest
+db_user_name: nextcloud
+db_name: nextcloud

@@ -1,0 +1,20 @@
+- name: set root password
+  mysql_user:
+    name: root
+    password: "{{ mariadb.root_user.password }}"
+    host_all: yes
+    check_implicit_admin: yes
+    login_password: "{{ mariadb.root_user.password }}"
+
+- name: delete anonymous users
+  mysql_user:
+    user: ''
+    host_all: yes
+    state: absent
+    login_password: "{{ mariadb.root_user.password }}"
+
+- name: remove test database
+  mysql_db:
+    db: test
+    state: absent
+    login_password: "{{ mariadb.root_user.password }}"

@@ -1,12 +1,30 @@
-- name: prepare installation directory
-  file:
-    path: "{{ nextcloud.path }}"
-    state: directory
-  register: nextcloud_path
+- name: prepare mariadb
+  import_tasks: mariadb.yml
 
-- name: download and extract
-  unarchive:
-    src: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud.version }}.tar.bz2"
-    remote_src: yes
-    dest: "{{ nextcloud.path }}"
-  when: nextcloud_path.changed
+- name: install PHP
+  import_tasks: php.yml
+
+- name: install Nextcloud
+  import_tasks: install.yml
+
+- name: create data directory
+  file:
+    path: "{{ nextcloud.data_path }}"
+    state: directory
+
+- name: link data directory
+  file:
+    path: "{{ nextcloud.path }}/data"
+    src: "{{ nextcloud.data_path }}"
+    state: link
+
+- name: install certificate via certbot
+  import_role:
+    role: certbot
+  vars:
+    certbot:
+      domain: "{{ nas.domain }}"
+      contact_mail_address: "{{ mail_recipient }}"
+
+- name: configure Apache
+  import_tasks: apache.yml

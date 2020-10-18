@@ -1,7 +1,7 @@
 dependencies:
   - role: apache2
-  - role: certbot
+  - role: mariadb
     vars:
-      certbot:
-        domain: "{{ nas.domain }}"
-        contact_mail_address: "{{ mail_recipient }}"
+      mariadb:
+        root_user:
+          password: "{{ db_root_password }}"
