@@ -1,3 +1,11 @@
+- name: create NAS folder/mount with restrictive permissions
+  file:
+    path: "{{ nas.mount_base_dir }}/{{ mount.value.name }}"
+    owner: "{{ nas.user.name }}"
+    group: "{{ nas.user.name }}"
+    mode: 751
+  tags: nas
+
 - name: "mount {{ mount.key }} storage device"
   mount:
     path: "{{ nas.mount_base_dir }}/{{ mount.value.name }}"
