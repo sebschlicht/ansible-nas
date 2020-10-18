@@ -1,0 +1,6 @@
+- name: set permissions of Nextcloud files
+  file:
+    path: "{{ nextcloud.path }}"
+    owner: www-data
+    group: www-data
+    recurse: yes

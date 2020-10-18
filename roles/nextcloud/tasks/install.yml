@@ -2,26 +2,18 @@
   file:
     path: "{{ nextcloud.path }}"
     state: directory
-  register: nextcloud_installation_path  
+  register: nc_install_path
 
 - name: download
   get_url:
     url: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud.version }}.tar.bz2"
-    dest: "{{ nextcloud_archive_path }}"
+    dest: "{{ nc_archive_path }}"
   register: nextcloud_download
-  when: nextcloud_installation_path.changed
+  when: nc_install_path.changed
 
 - name: extract
-  shell: 'tar -xf "{{ nextcloud_archive_path }}" -C "{{ nextcloud.path }}" --strip 1'
-  when: nextcloud_installation_path.changed
-
-- name: set Nextcloud file permissions
-  file:
-    path: "{{ nextcloud.path }}"
-    owner: www-data
-    group: www-data
-    mode: "u=rw,g=r,o=,a-x+X"
-    recurse: yes
+  shell: 'tar -xf "{{ nc_archive_path }}" -C "{{ nextcloud.path }}" --strip 1'
+  when: nc_install_path.changed
 
 - name: set base folder permissions
   file:
@@ -29,7 +21,76 @@
     owner: root
     group: www-data
     mode: 0750
+  when: nc_install_path.changed
 
-# TODO create missing folders (due to base folder permissions)
-# TODO set x flag for occ
-# TODO check for an idempotent solution
+- name: create lazy-initialized folders
+  file:
+    path: "{{ nextcloud.path }}/{{ item }}"
+    state: directory
+  with_items:
+    - assets
+  when: nc_install_path.changed
+
+- name: collect Nextcloud files
+  find:
+    path: "{{ nextcloud.path }}"
+    file_type: any
+    hidden: yes
+    excludes:
+      - .htaccess
+      - occ
+  changed_when: no
+  register: nc_files
+  when: nc_install_path.changed
+
+- name: set permissions of Nextcloud files
+  file:
+    path: "{{ item.path }}"
+    owner: www-data
+    group: www-data
+    mode: "u=rw,g=r,o=,a-x+X"
+    recurse: "{{ item.isdir }}"
+  with_items: "{{ nc_files.files }}"
+  when: nc_install_path.changed
+
+- name: set permissions of Nextcloud binaries
+  file:
+    path: "{{ nextcloud.path }}/occ"
+    owner: www-data
+    group: www-data
+    mode: 0751
+  when: nc_install_path.changed
+
+- name: set permissions of htaccess
+  file:
+    path: "{{ nextcloud.path }}/.htaccess"
+    owner: root
+    group: www-data
+    mode: 0644
+  when: nc_install_path.changed
+
+- name: create data directory
+  file:
+    path: "{{ nextcloud.data_path }}"
+    owner: www-data
+    group: www-data
+    mode: 0750
+    state: directory
+
+- name: install
+  shell:
+    cmd: |
+      sudo -u www-data php occ maintenance:install \
+        --data-dir '{{ nextcloud.data_path }}' \
+        --database 'mysql' --database-name '{{ db_name }}' \
+        --database-user '{{ db_user_name }}' --database-pass '{{ db_user_password }}' \
+        --admin-user '{{ nc_admin_name }}' --admin-pass '{{ nc_admin_password }}'
+    chdir: "{{ nextcloud.path }}"
+  when: nc_install_path.changed
+  no_log: yes
+
+# TODO try without chdir
+# TODO template config file for idempotency of configuration changes
+# TODO tune server https://docs.nextcloud.com/server/20/admin_manual/installation/server_tuning.html
+# TODO secure SSL https://doc.owncloud.com/server/admin_manual/installation/letsencrypt/apache.html, esp. ciphers
+# TODO check emoji support https://docs.nextcloud.com/server/latest/admin_manual/installation/system_requirements.html#database-requirements-for-mysql-mariadb

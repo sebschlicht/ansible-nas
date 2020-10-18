@@ -4,20 +4,6 @@
 - name: install PHP
   import_tasks: php.yml
 
-- name: install Nextcloud
-  import_tasks: install.yml
-
-- name: create data directory
-  file:
-    path: "{{ nextcloud.data_path }}"
-    state: directory
-
-- name: link data directory
-  file:
-    path: "{{ nextcloud.path }}/data"
-    src: "{{ nextcloud.data_path }}"
-    state: link
-
 - name: install certificate via certbot
   import_role:
     role: certbot
@@ -28,3 +14,6 @@
 
 - name: configure Apache
   import_tasks: apache.yml
+
+- name: install Nextcloud
+  import_tasks: install.yml
