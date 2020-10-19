@@ -88,9 +88,35 @@
     chdir: "{{ nextcloud.path }}"
   when: nc_install_path.changed
   no_log: yes
-
 # TODO try without chdir
-# TODO template config file for idempotency of configuration changes
-# TODO tune server https://docs.nextcloud.com/server/20/admin_manual/installation/server_tuning.html
+
+- name: configure
+  template:
+    src: nextcloud/config.php
+    dest: "{{ nextcloud.path }}/config/config.php"
+
+# TODO get redis socket (config) working
+- name: configure redis socket
+  blockinfile:
+    block: |
+      unixsocket /var/run/redis/redis-server.sock
+      unixsocketperm 700
+    path: /etc/redis/redis.conf
+
+- name: add web user to redis group
+  user:
+    name: www-data
+    groups: redis
+    append: yes
+
+- name: restart apache
+  service:
+    name: apache2
+    state: restarted
+
+# TODO enable mod_rewrite for index.php removal
+# TODO template file with OPcache config
+# TODO template crontab for www-data
+
 # TODO secure SSL https://doc.owncloud.com/server/admin_manual/installation/letsencrypt/apache.html, esp. ciphers
 # TODO check emoji support https://docs.nextcloud.com/server/latest/admin_manual/installation/system_requirements.html#database-requirements-for-mysql-mariadb

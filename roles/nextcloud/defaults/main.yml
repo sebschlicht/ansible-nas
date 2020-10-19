@@ -1,9 +1,11 @@
 nc_archive_path: /tmp/nextcloud.tar.bz2
 
-db_root_password: dbtest
-db_user_password: ncdbtest
+db_root_password: "{{ vault_db_root_password }}"
+db_user_password: "{{ vault_nc_db_user_password }}"
 db_user_name: nextcloud
 db_name: nextcloud
 
 nc_admin_name: nc-admin-user
-nc_admin_password: ncadmtest
+nc_admin_password: "{{ vault_nc_admin_password }}"
+nc_passwordsalt: "{{ vault_nc_passwordsalt }}"
+nc_secret: "{{ vault_nc_secret }}"
