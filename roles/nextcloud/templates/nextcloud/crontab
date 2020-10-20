@@ -1,0 +1,1 @@
+*/5  *  *  *  * php --define apc.enable_cli=1 -f {{ nextcloud.path }}/cron.php

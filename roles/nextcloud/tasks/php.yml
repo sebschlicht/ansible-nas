@@ -17,3 +17,8 @@
     - redis-server
     - php-apcu
     - php-imagick       # previews
+
+- name: configure PHP
+  blockinfile:
+    block: "{{ lookup('template', 'php/php.ini.j2') }}"
+    dest: "/etc/php/7.3/apache2/php.ini"

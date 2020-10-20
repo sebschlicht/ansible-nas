@@ -92,22 +92,24 @@
 
 - name: configure
   template:
-    src: nextcloud/config.php
-    dest: "{{ nextcloud.path }}/config/config.php"
+    src: "nextcloud/provisioned.config.php"
+    dest: "{{ nextcloud.path }}/config/"
 
-# TODO get redis socket (config) working
-- name: configure redis socket
+- name: configure redis
   blockinfile:
-    block: |
-      unixsocket /var/run/redis/redis-server.sock
-      unixsocketperm 700
-    path: /etc/redis/redis.conf
+    block: "{{ lookup('template', 'redis/redis.conf') }}"
+    dest: "/etc/redis/redis.conf"
 
-- name: add web user to redis group
+- name: add server user to redis group
   user:
     name: www-data
     groups: redis
     append: yes
+
+- name: restart redis
+  service:
+    name: redis-server
+    state: restarted
 
 - name: restart apache
   service:
@@ -115,7 +117,6 @@
     state: restarted
 
 # TODO enable mod_rewrite for index.php removal
-# TODO template file with OPcache config
 # TODO template crontab for www-data
 
 # TODO secure SSL https://doc.owncloud.com/server/admin_manual/installation/letsencrypt/apache.html, esp. ciphers
