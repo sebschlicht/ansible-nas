@@ -3,7 +3,7 @@
     name: "{{ item }}"
     cache_valid_time: 600
   with_items:
-    - php7.3
+    - php7.3            # TODO potentially obsolete (maybe still required for php-cli)
     - php7.3-common     # unknown
     - php7.3-curl
     - php7.3-dom
@@ -17,8 +17,15 @@
     - redis-server
     - php-apcu
     - php-imagick       # previews
+    - php7.3-fpm        # threading performance
 
-- name: configure PHP
+- name: configure PHP (php-fpm style)
   blockinfile:
     block: "{{ lookup('template', 'php/php.ini.j2') }}"
-    dest: "/etc/php/7.3/apache2/php.ini"
+    dest: "{{ nextcloud.path }}/.user.ini"
+
+# TODO file created before reaching this step?
+- name: configure php-fpm
+  blockinfile:
+    block: "{{ lookup('template', 'php/php-fpm.www.conf.j2') }}"
+    dest: "/etc/php/7.3/fpm/pool.d/www.conf"

@@ -4,7 +4,7 @@
   register: apache_enabled_mods
 
 - name: enable required Apache mods
-  shell: 'a2enmod {{ item }}'
+  shell: "a2enmod {{ item }}"
   when: not item in apache_enabled_mods.stdout
   with_items:
     - rewrite
@@ -12,6 +12,15 @@
     - env
     - dir
     - mime
+
+- name: switch from mod_php to php-fpm
+  shell: |
+    a2enmod proxy_fcgi;
+    a2enconf php7.3-fpm;
+    a2dismod php7.3;
+    a2dismod mpm_prefork;
+    a2enmod mpm_event;
+    a2enmod http2
 
 - name: create and enable sites
   include_tasks: site.yml
