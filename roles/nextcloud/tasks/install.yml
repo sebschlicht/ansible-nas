@@ -96,6 +96,9 @@
   template:
     src: "nextcloud/provisioned.config.php"
     dest: "{{ nextcloud.path }}/config/"
+    owner: www-data
+    group: www-data
+    mode: 0640
 
 - name: schedule cron job
   cron:
