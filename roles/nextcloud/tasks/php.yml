@@ -21,7 +21,7 @@
     - php7.3-bcmath     # Nextcloud performance recommendation
     - php7.3-gmp        # Nextcloud performance recommendation
 
-- name: configure PHP (php-fpm style)
+- name: configure PHP (files detected by php-fpm)
   blockinfile:
     block: "{{ lookup('template', 'php/php.ini.j2') }}"
     dest: "{{ nextcloud.path }}/.user.ini"

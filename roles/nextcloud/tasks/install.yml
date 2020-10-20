@@ -92,13 +92,8 @@
     sudo -u www-data php {{ nextcloud.path }}/occ background:cron
   when: nc_install_path.changed
 
-- name: configure
-  template:
-    src: "nextcloud/provisioned.config.php"
-    dest: "{{ nextcloud.path }}/config/"
-    owner: www-data
-    group: www-data
-    mode: 0640
+- name: configure routine
+  import_tasks: config.yml
 
 - name: schedule cron job
   cron:
@@ -127,7 +122,5 @@
   service:
     name: apache2
     state: restarted
-
-# TODO enable mod_rewrite for index.php removal
 
 # TODO check emoji support https://docs.nextcloud.com/server/latest/admin_manual/installation/system_requirements.html#database-requirements-for-mysql-mariadb

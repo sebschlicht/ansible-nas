@@ -17,6 +17,7 @@ $CONFIG = array (
   'mysql.utf8mb4' => true,
   'dbuser' => '{{ db_user_name }}',
   'dbpassword' => '{{ db_user_password }}',
+  'htaccess.RewriteBase' => '/',
   'installed' => true,
   'memcache.local' => '\OC\Memcache\APCu',
   'memcache.locking' => '\OC\Memcache\Redis',

@@ -1,0 +1,25 @@
+- name: configure
+  template:
+    src: "nextcloud/provisioned.config.php"
+    dest: "{{ nextcloud.path }}/config/"
+    owner: www-data
+    group: www-data
+    mode: 0640
+  register: nextcloud_config
+
+- name: make .htaccess writable for occ
+  file:
+    path: "{{ nextcloud.path }}/.htaccess"
+    owner: www-data
+  when: nextcloud_config.changed
+
+- name: update .htaccess via occ
+  shell: |
+    sudo -u www-data php {{ nextcloud.path }}/occ maintenance:update:htaccess
+  when: nextcloud_config.changed
+
+- name: protect .htaccess against modifications
+  file:
+    path: "{{ nextcloud.path }}/.htaccess"
+    owner: root
+  when: nextcloud_config.changed
