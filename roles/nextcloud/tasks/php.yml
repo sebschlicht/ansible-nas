@@ -18,14 +18,18 @@
     - php-apcu
     - php-imagick       # previews
     - php7.3-fpm        # threading performance
+    - php7.3-bcmath     # Nextcloud performance recommendation
+    - php7.3-gmp        # Nextcloud performance recommendation
 
 - name: configure PHP (php-fpm style)
   blockinfile:
     block: "{{ lookup('template', 'php/php.ini.j2') }}"
     dest: "{{ nextcloud.path }}/.user.ini"
+    marker: "; {mark} ANSIBLE MANAGED BLOCK"
 
 # TODO file created before reaching this step?
 - name: configure php-fpm
   blockinfile:
     block: "{{ lookup('template', 'php/php-fpm.www.conf.j2') }}"
     dest: "/etc/php/7.3/fpm/pool.d/www.conf"
+    marker: "; {mark} ANSIBLE MANAGED BLOCK"

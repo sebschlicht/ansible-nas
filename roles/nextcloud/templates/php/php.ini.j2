@@ -1,4 +1,4 @@
-# OPCache
+; OPCache
 opcache.enable=1
 opcache.interned_strings_buffer=16
 opcache.max_accelerated_files=10000
@@ -7,7 +7,10 @@ opcache.save_comments=1
 opcache.validate_timestamps=0
 opcache.fast_shutdown=1
 
-# uploads
+; uploads
 upload_max_filesize = 4G
 post_max_size = 4G
 output_buffering = 0
+
+; Nextcloud performance recommendation
+memory_limit = 512M
