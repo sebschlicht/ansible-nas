@@ -127,5 +127,4 @@
 
 # TODO enable mod_rewrite for index.php removal
 
-# TODO secure SSL https://doc.owncloud.com/server/admin_manual/installation/letsencrypt/apache.html, esp. ciphers
 # TODO check emoji support https://docs.nextcloud.com/server/latest/admin_manual/installation/system_requirements.html#database-requirements-for-mysql-mariadb

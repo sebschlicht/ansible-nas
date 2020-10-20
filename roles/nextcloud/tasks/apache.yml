@@ -22,10 +22,14 @@
     a2enmod mpm_event;
     a2enmod http2
 
-- name: create and enable sites
+- name: configure SSL
+  blockinfile:
+    block: "{{ lookup('template', 'apache2/options-ssl-apache.conf') }}"
+    dest: "/etc/letsencrypt/options-ssl-apache.conf"
+
+- name: create and enable virtual hosts
   include_tasks: site.yml
   with_items:
-    - nextcloud.conf
     - nextcloud-le-ssl.conf
   loop_control:
     loop_var: apache_site
