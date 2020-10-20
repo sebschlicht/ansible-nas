@@ -78,22 +78,31 @@
     state: directory
 
 - name: install
-  shell:
-    cmd: |
-      sudo -u www-data php occ maintenance:install \
-        --data-dir '{{ nextcloud.data_path }}' \
-        --database 'mysql' --database-name '{{ db_name }}' \
-        --database-user '{{ db_user_name }}' --database-pass '{{ db_user_password }}' \
-        --admin-user '{{ nc_admin_name }}' --admin-pass '{{ nc_admin_password }}'
-    chdir: "{{ nextcloud.path }}"
+  shell: |
+    sudo -u www-data php {{ nextcloud.path }}/occ maintenance:install \
+      --data-dir '{{ nextcloud.data_path }}' \
+      --database 'mysql' --database-name '{{ db_name }}' \
+      --database-user '{{ db_user_name }}' --database-pass '{{ db_user_password }}' \
+      --admin-user '{{ nc_admin_name }}' --admin-pass '{{ nc_admin_password }}'
   when: nc_install_path.changed
   no_log: yes
-# TODO try without chdir
+
+- name: configure background jobs
+  shell: |
+    sudo -u www-data php {{ nextcloud.path }}/occ background:cron
+  when: nc_install_path.changed
 
 - name: configure
   template:
     src: "nextcloud/provisioned.config.php"
     dest: "{{ nextcloud.path }}/config/"
+
+- name: schedule cron job
+  cron:
+    name: nextcloud
+    job: "php --define apc.enable_cli=1 -f {{ nextcloud.path }}/cron.php"
+    minute: "*/5"
+    user: "www-data"
 
 - name: configure redis
   blockinfile:
@@ -117,7 +126,6 @@
     state: restarted
 
 # TODO enable mod_rewrite for index.php removal
-# TODO template crontab for www-data
 
 # TODO secure SSL https://doc.owncloud.com/server/admin_manual/installation/letsencrypt/apache.html, esp. ciphers
 # TODO check emoji support https://docs.nextcloud.com/server/latest/admin_manual/installation/system_requirements.html#database-requirements-for-mysql-mariadb
