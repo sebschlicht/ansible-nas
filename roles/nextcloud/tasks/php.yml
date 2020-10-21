@@ -21,10 +21,11 @@
     - php7.3-bcmath     # Nextcloud performance recommendation
     - php7.3-gmp        # Nextcloud performance recommendation
 
-- name: configure PHP (files detected by php-fpm)
+# TODO file not created before reaching this step!
+- name: configure PHP (apache2)
   blockinfile:
     block: "{{ lookup('template', 'php/php.ini.j2') }}"
-    dest: "{{ nextcloud.path }}/.user.ini"
+    dest: "/etc/php/7.3/apache2/php.ini"
     marker: "; {mark} ANSIBLE MANAGED BLOCK"
 
 # TODO file created before reaching this step?
