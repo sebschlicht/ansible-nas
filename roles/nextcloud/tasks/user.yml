@@ -1,0 +1,19 @@
+# TODO create and assign (-g) groups via occ
+
+- name: create user for {{ user.full_name }}
+  shell: |
+    (
+      export OC_PASS="{{ user.nextcloud_password }}";
+      sudo -Eu www-data php {{ nextcloud.path }}/occ user:add -n --display-name="{{ user.full_name }}" --password-from-env {{ user.nextcloud_user | default(user.name) }}
+    )
+  no_log: yes
+  register: nextcloud_user
+  changed_when: nextcloud_user.rc == 0
+  failed_when:
+    - nextcloud_user.rc != 0
+    - "'already exists.' not in nextcloud_user.stdout"
+
+- name: set mail address for newly created user of {{ user.full_name }}
+  shell: |
+    sudo -Eu www-data php {{ nextcloud.path }}/occ user:setting "{{ user.nextcloud_user | default(user.name) }}" "settings" "email" "{{ user.mail_address }}"
+  when: nextcloud_user.changed

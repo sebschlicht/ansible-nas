@@ -122,5 +122,3 @@
   service:
     name: apache2
     state: restarted
-
-# TODO check emoji support https://docs.nextcloud.com/server/latest/admin_manual/installation/system_requirements.html#database-requirements-for-mysql-mariadb

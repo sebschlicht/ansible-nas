@@ -23,3 +23,9 @@
     path: "{{ nextcloud.path }}/.htaccess"
     owner: root
   when: nextcloud_config.changed
+
+- name: create users
+  include_tasks: user.yml
+  with_items: "{{ users }}"
+  loop_control:
+    loop_var: user
