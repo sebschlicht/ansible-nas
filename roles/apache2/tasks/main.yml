@@ -2,3 +2,16 @@
   apt:
     name: apache2
     cache_valid_time: 600
+
+- name: configure SSL
+  blockinfile:
+    block: "{{ lookup('template', 'options-ssl-apache.conf') }}"
+    dest: "/etc/letsencrypt/options-ssl-apache.conf"
+
+- name: install SSL certificate via certbot
+  import_role:
+    role: certbot
+  vars:
+    certbot:
+      domain: "{{ nas.domain }}"
+      contact_mail_address: "{{ mail_recipient }}"

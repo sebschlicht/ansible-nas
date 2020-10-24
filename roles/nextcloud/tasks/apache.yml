@@ -1,35 +1,25 @@
-- name: get enabled Apache mods
-  shell: "apachectl -M | cut -d' ' -f2"
-  changed_when: no
-  register: apache_enabled_mods
-
-- name: enable required Apache mods
-  shell: "a2enmod {{ item }}"
-  when: not item in apache_enabled_mods.stdout
-  with_items:
-    - rewrite
-    - headers
-    - env
-    - dir
-    - mime
-
-- name: switch from mod_php to php-fpm
-  shell: |
-    a2enmod proxy_fcgi;
-    a2enconf php7.3-fpm;
-    a2dismod php7.3;
-    a2dismod mpm_prefork;
-    a2enmod mpm_event;
-    a2enmod http2
-
-- name: configure SSL
-  blockinfile:
-    block: "{{ lookup('template', 'apache2/options-ssl-apache.conf') }}"
-    dest: "/etc/letsencrypt/options-ssl-apache.conf"
+- name: ensure required Apache modules are enabled
+  import_role:
+    name: apache2
+    tasks_from: modules.yml
+  vars:
+    modules:
+      - rewrite
+      - headers
+      - env
+      - dir
+      - mime
 
 - name: create and enable virtual hosts
-  include_tasks: site.yml
+  include_role:
+    name: apache2
+    tasks_from: site.yml
   with_items:
     - nextcloud-le-ssl.conf
-  loop_control:
-    loop_var: apache_site
+  register: apache_sites
+
+- name: restart apache
+  service:
+    name: apache2
+    state: restarted
+  when: apache_sites.changed

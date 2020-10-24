@@ -1,4 +1,4 @@
-- name: set permissions of Nextcloud files
+- name: relax file permissions
   file:
     path: "{{ nextcloud.path }}"
     owner: www-data

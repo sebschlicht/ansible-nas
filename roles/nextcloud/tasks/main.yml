@@ -1,16 +1,5 @@
-- name: prepare mariadb
+- name: fill database
   import_tasks: mariadb.yml
-
-- name: install PHP
-  import_tasks: php.yml
-
-- name: install certificate via certbot
-  import_role:
-    role: certbot
-  vars:
-    certbot:
-      domain: "{{ nas.domain }}"
-      contact_mail_address: "{{ mail_recipient }}"
 
 - name: configure Apache
   import_tasks: apache.yml

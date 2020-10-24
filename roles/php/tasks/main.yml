@@ -1,4 +1,4 @@
-- name: install PHP with required modules
+- name: install
   apt:
     name: "{{ item }}"
     cache_valid_time: 600
@@ -20,17 +20,45 @@
     - php7.3-fpm        # threading performance
     - php7.3-bcmath     # Nextcloud performance recommendation
     - php7.3-gmp        # Nextcloud performance recommendation
+  register: php_install
 
-# TODO file not created before reaching this step!
-- name: configure PHP (apache2)
+- name: configure (apache2)
   blockinfile:
     block: "{{ lookup('template', 'php/php.ini.j2') }}"
     dest: "/etc/php/7.3/apache2/php.ini"
     marker: "; {mark} ANSIBLE MANAGED BLOCK"
 
-# TODO file created before reaching this step?
-- name: configure php-fpm
+# TODO check if file created by PHP role or by Apache configuration call, swap order if required
+- name: configure (php-fpm)
   blockinfile:
     block: "{{ lookup('template', 'php/php-fpm.www.conf.j2') }}"
     dest: "/etc/php/7.3/fpm/pool.d/www.conf"
     marker: "; {mark} ANSIBLE MANAGED BLOCK"
+
+- name: switch from mod_php to php-fpm
+  shell: |
+    a2enmod proxy_fcgi;
+    a2enconf php7.3-fpm;
+    a2dismod php7.3;
+    a2dismod mpm_prefork;
+    a2enmod mpm_event;
+    a2enmod http2
+  when: php_install.changed
+
+- name: configure redis
+  blockinfile:
+    block: "{{ lookup('template', 'redis/redis.conf') }}"
+    dest: "/etc/redis/redis.conf"
+  register: redis_config
+
+- name: add server user to redis group
+  user:
+    name: www-data
+    groups: redis
+    append: yes
+  
+- name: restart redis
+  service:
+    name: redis-server
+    state: restarted
+  when: php_install.changed or redis_config.changed

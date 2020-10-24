@@ -1,5 +1,5 @@
 dependencies:
-  - role: apache2
+  - role: php
   - role: mariadb
     vars:
       mariadb:
