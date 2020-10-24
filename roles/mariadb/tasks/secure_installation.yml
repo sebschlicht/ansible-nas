@@ -1,10 +1,21 @@
+- name: probe root user login
+  mysql_user:
+    name: root
+    host_all: yes
+    login_password: "{{ mariadb.root_user.password }}"
+  no_log: yes
+  changed_when: no
+  failed_when: no
+  register: root_login
+
 - name: set root password
   mysql_user:
     name: root
     password: "{{ mariadb.root_user.password }}"
     host_all: yes
-    check_implicit_admin: yes
     login_password: "{{ mariadb.root_user.password }}"
+  no_log: yes
+  when: "'Access denied' in root_login.msg"
 
 - name: delete anonymous users
   mysql_user:
@@ -12,6 +23,7 @@
     host_all: yes
     state: absent
     login_password: "{{ mariadb.root_user.password }}"
+  no_log: yes
 
 - name: remove test database
   mysql_db:

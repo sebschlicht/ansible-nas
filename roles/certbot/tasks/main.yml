@@ -1,10 +1,9 @@
 - name: install
   apt:
-    name: "{{ item }}"
+    name:
+      - certbot
+      - python-certbot-apache
     cache_valid_time: 600
-  with_items:
-    - certbot
-    - python-certbot-apache
   register: certbot_install
 
 - name: create certificate (Apache)

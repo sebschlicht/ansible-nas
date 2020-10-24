@@ -3,16 +3,12 @@
     name: "{{ db_name }}"
     login_password: "{{ db_root_password }}"
 
-# - name: remove database user # avoid privilege parsing bug of mysql_user
-#   mysql_user:
-#     name: "{{ db_user_name }}"
-#     state: absent
-#     login_password: "{{ db_root_password }}"
-
 - name: create database user
   mysql_user:
     name: "{{ db_user_name }}"
     password: "{{ db_user_password }}"
+    update_password: on_create
     host: localhost
     priv: "{{ db_name }}.*:ALL,GRANT"
     login_password: "{{ db_root_password }}"
+  no_log: yes

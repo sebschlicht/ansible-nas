@@ -1,25 +1,24 @@
 - name: install
   apt:
-    name: "{{ item }}"
+    name:
+      - php7.3            # TODO potentially obsolete (maybe still required for php-cli)
+      - php7.3-common     # unknown
+      - php7.3-curl
+      - php7.3-dom
+      - php7.3-gd
+      - php7.3-intl       # translation performance
+      - php7.3-mbstring
+      - php7.3-mysql
+      - php7.3-xml
+      - php7.3-zip
+      - php-redis         # caching
+      - redis-server
+      - php-apcu
+      - php-imagick       # previews
+      - php7.3-fpm        # threading performance
+      - php7.3-bcmath     # Nextcloud performance recommendation
+      - php7.3-gmp        # Nextcloud performance recommendation
     cache_valid_time: 600
-  with_items:
-    - php7.3            # TODO potentially obsolete (maybe still required for php-cli)
-    - php7.3-common     # unknown
-    - php7.3-curl
-    - php7.3-dom
-    - php7.3-gd
-    - php7.3-intl       # translation performance
-    - php7.3-mbstring
-    - php7.3-mysql
-    - php7.3-xml
-    - php7.3-zip
-    - php-redis         # caching
-    - redis-server
-    - php-apcu
-    - php-imagick       # previews
-    - php7.3-fpm        # threading performance
-    - php7.3-bcmath     # Nextcloud performance recommendation
-    - php7.3-gmp        # Nextcloud performance recommendation
   register: php_install
 
 - name: configure (apache2)

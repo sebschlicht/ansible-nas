@@ -1,6 +1,8 @@
 - name: unattended upgrades - install
   apt:
-    name: unattended-upgrades,apt-listchanges
+    name:
+      - unattended-upgrades
+      - apt-listchanges
     cache_valid_time: 600
 
 - name: unattended upgrades - configure
