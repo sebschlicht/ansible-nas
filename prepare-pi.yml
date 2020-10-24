@@ -1,0 +1,9 @@
+---
+- name: Prepare a fresh Raspberry Pi for the NAS setup
+  hosts: pi
+  remote_user: pi
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - prepare-pi

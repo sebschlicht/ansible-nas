@@ -1,4 +1,4 @@
-setup_user: pi
+setup_user: sebschlicht
 
 nas:
   hostname: pi

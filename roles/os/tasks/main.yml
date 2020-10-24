@@ -1,0 +1,6 @@
+- name: create OS users
+  user:
+    name: "{{ item.name }}"
+    password: "{{ item.initial_password }}"
+    groups: "{{ item.groups | default(omit) }}"
+  with_items: "{{ users }}"

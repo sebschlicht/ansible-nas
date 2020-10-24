@@ -1,0 +1,4 @@
+- name: configure SSL (apache)
+  blockinfile:
+    block: "{{ lookup('file', 'options-ssl-apache.conf') }}"
+    dest: "/etc/letsencrypt/options-ssl-apache.conf"

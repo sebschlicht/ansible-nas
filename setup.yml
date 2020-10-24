@@ -6,6 +6,8 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   roles:
+    - role: os
+      tags: always
     - role: nas
       tags: nas
     - role: sshd
