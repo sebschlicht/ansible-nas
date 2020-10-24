@@ -23,14 +23,14 @@
 
 - name: configure (apache2)
   blockinfile:
-    block: "{{ lookup('template', 'php/php.ini.j2') }}"
+    block: "{{ lookup('file', 'php/php.ini') }}"
     dest: "/etc/php/7.3/apache2/php.ini"
     marker: "; {mark} ANSIBLE MANAGED BLOCK"
 
 # TODO check if file created by PHP role or by Apache configuration call, swap order if required
 - name: configure (php-fpm)
   blockinfile:
-    block: "{{ lookup('template', 'php/php-fpm.www.conf.j2') }}"
+    block: "{{ lookup('file', 'php/php-fpm.www.conf') }}"
     dest: "/etc/php/7.3/fpm/pool.d/www.conf"
     marker: "; {mark} ANSIBLE MANAGED BLOCK"
 
@@ -46,7 +46,7 @@
 
 - name: configure redis
   blockinfile:
-    block: "{{ lookup('template', 'redis/redis.conf') }}"
+    block: "{{ lookup('file', 'redis/redis.conf') }}"
     dest: "/etc/redis/redis.conf"
   register: redis_config
 

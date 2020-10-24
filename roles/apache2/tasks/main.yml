@@ -5,7 +5,7 @@
 
 - name: configure SSL
   blockinfile:
-    block: "{{ lookup('template', 'options-ssl-apache.conf') }}"
+    block: "{{ lookup('file', 'options-ssl-apache.conf') }}"
     dest: "/etc/letsencrypt/options-ssl-apache.conf"
 
 - name: install SSL certificate via certbot
