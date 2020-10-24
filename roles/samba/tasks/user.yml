@@ -6,5 +6,5 @@
   run_once: yes
 
 - name: create samba user '{{ user.name }}'
-  shell: "(echo {{ user.samba.password }}; echo {{ user.samba.password }}) | smbpasswd -s -a {{ user.name }}"
+  shell: "(echo {{ user.samba_password }}; echo {{ user.samba_password }}) | smbpasswd -s -a {{ user.name }}"
   when: "samba_user_exists.rc == 1"

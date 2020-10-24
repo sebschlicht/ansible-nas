@@ -54,8 +54,7 @@ users:
     backup_folder_name: sebastian
     initial_password: $6$bvWKhsKfYQL8FH$FBXZZLp2ylLIEFjpj6c7vq.pCaJCH3nn3daYG3kEAhfhOxPoE6Y1kIux9VAiTQ8m1BPbmdYQ7OnCJNgm8h9VE1
     groups: sudo
-    samba:
-      password: "{{ vault_sebschlicht_smbpasswd }}"
+    samba_password: "{{ vault_sebschlicht_smbpasswd }}"
     nextcloud_user: sebastian
     nextcloud_password: "{{ vault_sebschlicht_nextcloud_password }}"
     authorized_keys:
@@ -66,16 +65,14 @@ users:
     mail_address: "{{ vault_isspek_mail_address }}"
     backup_folder_name: ipek
     initial_password: $6$AupSaBcLM5QMskO$FOVMKV.xMaNlcGsabZEoI7Hdmk9XxVF0bPBbcn2hsUizL0NQeOiIbdtfZGXDowKaP9acY5iDjIp13Y8upcvRr/
-    samba:
-      password: "{{ vault_isspek_smbpasswd }}"
+    samba_password: "{{ vault_isspek_smbpasswd }}"
     nextcloud_password: "{{ vault_isspek_nextcloud_password }}"
   - name: mas
     full_name: Michael und Andrea Schlicht
     mail_address: "{{ vault_mas_mail_address }}"
     backup_folder_name: andrea-michael
     initial_password: $6$IieSj6WUcNC$Hlw.UkdS0fqoCaGibNLUCp5sCGm/Jb9KSBWOqtyq6QY.rEPuG5sZyjcYeVqQ0IVdssrUqHK4xgteW3f12S9Fa1
-    samba:
-      password: "{{ vault_mas_smbpasswd }}"
+    samba_password: "{{ vault_mas_smbpasswd }}"
     nextcloud_password: "{{ vault_mas_nextcloud_password }}"
 
 running_in_container: no

@@ -24,7 +24,7 @@ In order to apply this playbook to one of your machines, there are basically two
 1. [configure the inventory](#inventory-configuration) to your needs
 1. run the playbook (use [tags](#tags) to install only specific components)
 
-       ansible-playbook -i inventories/custom nas.yml
+       ansible-playbook -i inventories/custom setup.yml
 
 ## Tags
 
@@ -34,7 +34,7 @@ Thus, most roles map to tags that allow to opt-in the respective feature.
 
 For example, the following run would only setup a rudimentary NAS on your machine:
 
-    ansible-playbook -i inventories/custom --tags nas nas.yml
+    ansible-playbook -i inventories/custom --tags nas setup.yml
 
 If tags are ommitted, however, all roles will be used and hence all features will be installed.
 
@@ -84,7 +84,7 @@ The following tags are available:
 
 * `cloud`
 
-  Installs and configures a Nextcloud instance of the NAS, to allow users to store files in a private cloud.
+  Installs and configures a Nextcloud instance on the NAS, to allow users to store and share files in a personal cloud.
 
   Use the configuration to specify a Nextcloud password for each NAS user.
 
@@ -141,7 +141,7 @@ Variable | Description
 `unattended_upgrades.notification_mail_recipient` | recipient for summary mails of performed unattended upgrades
 `sshd.allow_users`      | list of users that are allowed to SSH into the NAS, besides the individual users
 `sshd.enable_password_authentication` | flag to enable password-based authentication for SSH clients (default: `false`)
-`users`                 | list of individual NAS users, each having a user `name`, an `initial_password` and a `samba.password` (if this feature is used). you may also specify a `backup_folder_name` (defaults to username) and additional group assignments (`groups`). you may as well specify a list of `authorized_keys` for passwordless SSH access. if no keys have been specified, the user won't be able to connect via SSH unless the password authentication is enabled
+`users`                 | list of individual NAS users, each having a user `name`, an `initial_password`, a `nextcloud_password` and a `samba_password` (if the respective feature is used). you may also specify a `backup_folder_name` (defaults to username) and additional group assignments (`groups`). you may as well specify a list of `authorized_keys` for passwordless SSH access. if no keys have been specified, the user won't be able to connect via SSH unless the password authentication is enabled
 `dynv6.token`           | token to update the current IP address of the NAS domain on DynV6
 `minidlna.*`            | `display_name` to be shown in client devices, `directories` to list paths that should be accessible for clients
 `samba.internal_shares` | internal Samba shares, each having a `name` and a `path`, that are accessible with any account

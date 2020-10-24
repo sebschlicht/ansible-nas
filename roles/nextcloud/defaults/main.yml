@@ -7,11 +7,11 @@ nc_binary_mode: 0751
 nc_htaccess_mode: 0644
 
 db_root_password: "{{ vault_db_root_password }}"
-db_user_password: "{{ vault_nc_db_user_password }}"
 db_user_name: nextcloud
+db_user_password: "{{ vault_nc_db_user_password }}"
 db_name: nextcloud
 
-nc_admin_name: nc-admin-user
-nc_admin_password: "{{ vault_nc_admin_password }}"
 nc_passwordsalt: "{{ vault_nc_passwordsalt }}"
 nc_secret: "{{ vault_nc_secret }}"
+nc_admin_name: nc-admin-user
+nc_admin_password: "{{ vault_nc_admin_password }}"

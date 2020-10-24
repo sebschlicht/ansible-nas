@@ -2,20 +2,20 @@
   template:
     src: "nextcloud/provisioned.config.php"
     dest: "{{ nextcloud.path }}/config/"
-    owner: "{{ apache_user }}"
-    group: "{{ apache_user }}"
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
     mode: 0640
   register: nextcloud_config
 
 - name: make .htaccess writable for occ
   file:
     path: "{{ nextcloud.path }}/.htaccess"
-    owner: "{{ apache_user }}"
+    owner: "{{ server_user }}"
   when: nextcloud_config.changed
 
 - name: update .htaccess via occ
   shell: |
-    sudo -u "{{ apache_user }}" php {{ nextcloud.path }}/occ maintenance:update:htaccess
+    sudo -u "{{ server_user }}" php {{ nextcloud.path }}/occ maintenance:update:htaccess
   when: nextcloud_config.changed
 
 - name: protect .htaccess against modifications
@@ -26,8 +26,15 @@
 
 - name: configure background jobs
   shell: |
-    sudo -u "{{ apache_user }}" php {{ nextcloud.path }}/occ background:cron
+    sudo -u "{{ server_user }}" php {{ nextcloud.path }}/occ background:cron
   when: nc_install_path.changed
+
+- name: schedule background cron job
+  cron:
+    name: nextcloud
+    job: "php --define apc.enable_cli=1 -f {{ nextcloud.path }}/cron.php"
+    minute: "*/5"
+    user: "{{ server_user }}"
 
 - name: create users
   include_tasks: user.yml

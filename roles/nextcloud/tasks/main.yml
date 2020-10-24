@@ -6,3 +6,6 @@
 
 - name: install Nextcloud
   import_tasks: install.yml
+
+- name: configure Nextcloud
+  import_tasks: config.yml
