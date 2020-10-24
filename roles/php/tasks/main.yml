@@ -21,14 +21,13 @@
     cache_valid_time: 600
   register: php_install
 
-- name: configure (apache2)
+- name: configure (fpm)
   blockinfile:
     block: "{{ lookup('file', 'php/php.ini') }}"
-    dest: "/etc/php/7.3/apache2/php.ini"
+    dest: "/etc/php/7.3/fpm/php.ini"
     marker: "; {mark} ANSIBLE MANAGED BLOCK"
 
-# TODO check if file created by PHP role or by Apache configuration call, swap order if required
-- name: configure (php-fpm)
+- name: configure (fpm-pool)
   blockinfile:
     block: "{{ lookup('file', 'php/php-fpm.www.conf') }}"
     dest: "/etc/php/7.3/fpm/pool.d/www.conf"
@@ -36,12 +35,10 @@
 
 - name: switch from mod_php to php-fpm
   shell: |
-    a2enmod proxy_fcgi;
+    a2enmod proxy_fcgi setenvif;
     a2enconf php7.3-fpm;
-    a2dismod php7.3;
-    a2dismod mpm_prefork;
-    a2enmod mpm_event;
-    a2enmod http2
+    a2dismod php7.3 mpm_prefork;
+    a2enmod mpm_event http2
   when: php_install.changed
 
 - name: configure redis

@@ -27,7 +27,7 @@
 - name: configure background jobs
   shell: |
     sudo -u "{{ server_user }}" php {{ nextcloud.path }}/occ background:cron
-  when: nc_install_path.changed
+  when: nextcloud_download.changed
 
 - name: schedule background cron job
   cron:

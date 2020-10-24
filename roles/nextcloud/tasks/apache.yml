@@ -10,6 +10,7 @@
       - dir
       - mime
 
+# TODO what happens with the created virtual hosts when the certificate IS renewed?
 - name: create and enable virtual hosts
   include_role:
     name: apache2
@@ -18,8 +19,17 @@
     - nextcloud-le-ssl.conf
   register: apache_sites
 
+- name: disable default virtual hosts
+  file:
+    path: "/etc/apache2/sites-enabled/{{ item }}"
+    state: absent
+  with_items:
+    - 000-default.conf
+    - 000-default-le-ssl.conf
+  register: apache_default_sites
+
 - name: restart apache
   service:
     name: apache2
     state: restarted
-  when: apache_sites.changed
+  when: apache_sites.changed or apache_default_sites.changed

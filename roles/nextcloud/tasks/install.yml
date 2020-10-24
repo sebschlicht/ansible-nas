@@ -2,18 +2,16 @@
   file:
     path: "{{ nextcloud.path }}"
     state: directory
-  register: nc_install_path
 
 - name: download
   get_url:
     url: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud.version }}.tar.bz2"
     dest: "{{ nc_archive_path }}"
   register: nextcloud_download
-  when: nc_install_path.changed
 
 - name: extract
   shell: 'tar -xf "{{ nc_archive_path }}" -C "{{ nextcloud.path }}" --strip 1'
-  when: nc_install_path.changed
+  when: nextcloud_download.changed
 
 - name: set Nextcloud folder permissions
   file:
@@ -21,7 +19,7 @@
     owner: root
     group: "{{ server_user }}"
     mode: "{{ nc_directory_mode }}"
-  when: nc_install_path.changed
+  when: nextcloud_download.changed
 
 - name: create lazy-initialized folders
   file:
@@ -29,7 +27,7 @@
     state: directory
   with_items:
     - assets
-  when: nc_install_path.changed
+  when: nextcloud_download.changed
 
 - name: collect Nextcloud files
   find:
@@ -41,7 +39,7 @@
       - occ
   changed_when: no
   register: nc_files
-  when: nc_install_path.changed
+  when: nextcloud_download.changed
 
 - name: set permissions of Nextcloud files and folders
   file:
@@ -51,7 +49,7 @@
     mode: "{{ nc_directory_and_file_mode }}"
     recurse: "{{ item.isdir }}"
   with_items: "{{ nc_files.files }}"
-  when: nc_install_path.changed
+  when: nextcloud_download.changed
 
 - name: set permissions of Nextcloud binaries
   file:
@@ -59,7 +57,7 @@
     owner: "{{ server_user }}"
     group: "{{ server_user }}"
     mode: "{{ nc_binary_mode }}"
-  when: nc_install_path.changed
+  when: nextcloud_download.changed
 
 - name: set permissions of htaccess
   file:
@@ -67,9 +65,9 @@
     owner: root
     group: "{{ server_user }}"
     mode: "{{ nc_htaccess_mode }}"
-  when: nc_install_path.changed
+  when: nextcloud_download.changed
 
-- name: create data directory
+- name: create (external) data directory
   file:
     path: "{{ nextcloud.data_path }}"
     owner: "{{ server_user }}"
@@ -84,5 +82,5 @@
       --database 'mysql' --database-name '{{ db_name }}' \
       --database-user '{{ db_user_name }}' --database-pass '{{ db_user_password }}' \
       --admin-user '{{ nc_admin_name }}' --admin-pass '{{ nc_admin_password }}'
-  when: nc_install_path.changed
+  when: nextcloud_download.changed
   no_log: yes
