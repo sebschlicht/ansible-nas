@@ -19,7 +19,7 @@
   file:
     path: "{{ nextcloud.path }}"
     owner: root
-    group: www-data
+    group: "{{ server_user }}"
     mode: 0750
   when: nc_install_path.changed
 
@@ -46,8 +46,8 @@
 - name: set permissions of Nextcloud files
   file:
     path: "{{ item.path }}"
-    owner: www-data
-    group: www-data
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
     mode: "u=rw,g=r,o=,a-x+X"
     recurse: "{{ item.isdir }}"
   with_items: "{{ nc_files.files }}"
@@ -56,8 +56,8 @@
 - name: set permissions of Nextcloud binaries
   file:
     path: "{{ nextcloud.path }}/occ"
-    owner: www-data
-    group: www-data
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
     mode: 0751
   when: nc_install_path.changed
 
@@ -65,21 +65,21 @@
   file:
     path: "{{ nextcloud.path }}/.htaccess"
     owner: root
-    group: www-data
+    group: "{{ server_user }}"
     mode: 0644
   when: nc_install_path.changed
 
 - name: create data directory
   file:
     path: "{{ nextcloud.data_path }}"
-    owner: www-data
-    group: www-data
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
     mode: 0750
     state: directory
 
 - name: install
   shell: |
-    sudo -u www-data php {{ nextcloud.path }}/occ maintenance:install \
+    sudo -u "{{ server_user }}" php {{ nextcloud.path }}/occ maintenance:install \
       --data-dir '{{ nextcloud.data_path }}' \
       --database 'mysql' --database-name '{{ db_name }}' \
       --database-user '{{ db_user_name }}' --database-pass '{{ db_user_password }}' \
@@ -95,4 +95,4 @@
     name: nextcloud
     job: "php --define apc.enable_cli=1 -f {{ nextcloud.path }}/cron.php"
     minute: "*/5"
-    user: "www-data"
+    user: ""{{ server_user }}""

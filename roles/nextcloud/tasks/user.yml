@@ -4,7 +4,7 @@
   shell: |
     (
       export OC_PASS="{{ user.nextcloud_password }}";
-      sudo -Eu www-data php {{ nextcloud.path }}/occ user:add -n --display-name="{{ user.full_name }}" --password-from-env {{ user.nextcloud_user | default(user.name) }}
+      sudo -Eu "{{ server_user }}" php {{ nextcloud.path }}/occ user:add -n --display-name="{{ user.full_name }}" --password-from-env "{{ user.nextcloud_user | default(user.name) }}"
     )
   no_log: yes
   register: nextcloud_user
@@ -15,5 +15,5 @@
 
 - name: set mail address for newly created user of {{ user.full_name }}
   shell: |
-    sudo -Eu www-data php {{ nextcloud.path }}/occ user:setting "{{ user.nextcloud_user | default(user.name) }}" "settings" "email" "{{ user.mail_address }}"
+    sudo -Eu "{{ server_user }}" php {{ nextcloud.path }}/occ user:setting "{{ user.nextcloud_user | default(user.name) }}" settings email "{{ user.mail_address }}"
   when: nextcloud_user.changed

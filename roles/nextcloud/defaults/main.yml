@@ -1,3 +1,5 @@
+server_user: www-data
+
 nc_archive_path: /tmp/nextcloud.tar.bz2
 
 db_root_password: "{{ vault_db_root_password }}"

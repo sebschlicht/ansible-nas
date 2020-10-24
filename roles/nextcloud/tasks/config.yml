@@ -2,20 +2,20 @@
   template:
     src: "nextcloud/provisioned.config.php"
     dest: "{{ nextcloud.path }}/config/"
-    owner: www-data
-    group: www-data
+    owner: "{{ apache_user }}"
+    group: "{{ apache_user }}"
     mode: 0640
   register: nextcloud_config
 
 - name: make .htaccess writable for occ
   file:
     path: "{{ nextcloud.path }}/.htaccess"
-    owner: www-data
+    owner: "{{ apache_user }}"
   when: nextcloud_config.changed
 
 - name: update .htaccess via occ
   shell: |
-    sudo -u www-data php {{ nextcloud.path }}/occ maintenance:update:htaccess
+    sudo -u "{{ apache_user }}" php {{ nextcloud.path }}/occ maintenance:update:htaccess
   when: nextcloud_config.changed
 
 - name: protect .htaccess against modifications
@@ -26,7 +26,7 @@
 
 - name: configure background jobs
   shell: |
-    sudo -u www-data php {{ nextcloud.path }}/occ background:cron
+    sudo -u "{{ apache_user }}" php {{ nextcloud.path }}/occ background:cron
   when: nc_install_path.changed
 
 - name: create users

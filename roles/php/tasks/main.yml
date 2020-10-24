@@ -52,7 +52,7 @@
 
 - name: add server user to redis group
   user:
-    name: www-data
+    name: "{{ server_user }}"
     groups: redis
     append: yes
   

@@ -1,6 +1,6 @@
 - name: relax file permissions
   file:
     path: "{{ nextcloud.path }}"
-    owner: www-data
-    group: www-data
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
     recurse: yes
