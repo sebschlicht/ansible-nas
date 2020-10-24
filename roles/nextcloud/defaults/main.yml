@@ -1,6 +1,10 @@
 server_user: www-data
 
 nc_archive_path: /tmp/nextcloud.tar.bz2
+nc_directory_and_file_mode: "u=rw,g=r,o=,a-x+X"
+nc_directory_mode: 0750
+nc_binary_mode: 0751
+nc_htaccess_mode: 0644
 
 db_root_password: "{{ vault_db_root_password }}"
 db_user_password: "{{ vault_nc_db_user_password }}"
