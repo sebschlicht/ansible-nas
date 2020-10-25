@@ -6,7 +6,7 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   roles:
-    - role: os
+    - role: ssmtp
       tags: always
     - role: nas
       tags: nas
@@ -19,6 +19,6 @@
     - role: minidlna
       tags: dlna
     - role: ufw
-      tags: firewall
+      tags: ufw
     - role: nextcloud
       tags: cloud

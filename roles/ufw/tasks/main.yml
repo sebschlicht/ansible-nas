@@ -17,13 +17,11 @@
   ufw:
     rule: limit
     name: OpenSSH
-  tags: sshd
 
 - name: allow access to Samba
   ufw:
     rule: allow
     name: Samba
-  tags: smb
 
 - name: allow DLNA communication
   ufw:

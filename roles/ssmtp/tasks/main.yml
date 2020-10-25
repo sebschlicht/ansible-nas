@@ -1,21 +1,21 @@
-- name: mailing - install
+- name: install
   apt:
     name:
       - ssmtp
       - mailutils
     cache_valid_time: 600
 
-- name: mailing - configure
+- name: configure
   blockinfile:
     path: /etc/ssmtp/ssmtp.conf
-    block: "{{ lookup('template', 'etc/ssmtp/ssmtp.conf.j2') }}"
+    block: "{{ lookup('template', 'ssmtp.conf.j2') }}"
 
-- name: mailing - configure alias
+- name: set alias
   lineinfile:
     path: /etc/ssmtp/revaliases
     line: "root:{{ mailing.address }}:{{ mailing.server }}"
   register: alias
 
-- name: mailing - configure root name (mail sender)
+- name: set root name (mail sender)
   shell: "chfn -f '{{ mailing.sender_name }}' root"
   when: alias.changed
