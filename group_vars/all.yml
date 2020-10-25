@@ -4,12 +4,12 @@ nas:
   hostname: pi
   domain: koblenz.dns.sschlicht.de
   user:
-    name: nas
-  mount_base_dir: /mnt/nas
-  mounts:
-    primary:
-      name: primary
-      uuid: 18A302FC66F67B28
+    name: pi
+  backup_location: /mnt/nas/primary/backup
+
+mounts:
+  primary:
+    uuid: 18A302FC66F67B28
 
 mail_recipient: pimon@sschlicht.de
 

@@ -2,11 +2,13 @@
   file:
     path: "{{ nextcloud.path }}"
     state: directory
+  register: nextcloud_directory
 
 - name: download
   get_url:
     url: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud.version }}.tar.bz2"
     dest: "{{ nc_archive_path }}"
+  when: nextcloud_directory.changed
   register: nextcloud_download
 
 - name: extract

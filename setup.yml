@@ -6,16 +6,14 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   roles:
-    - role: nas
-      tags: nas
+    - role: backups
+      tags: always
     - role: auto-upgrade
       tags: auto-upgrade
-    - role: sshd
-      tags: sshd
     - role: dynv6
-      tags: dyndns
+      tags: ddns
     - role: samba
-      tags: smb
+      tags: samba
     - role: minidlna
       tags: dlna
     - role: ufw

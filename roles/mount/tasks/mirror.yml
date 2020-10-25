@@ -1,0 +1,7 @@
+- name: configure mirroring to secondary mount
+  cron:
+    name: "mirror NAS storages"
+    job: "rsync -ast --delete {{ nas.mount_base_dir }}/{{ nas.mounts.primary.name }} {{ nas.mount_base_dir }}/{{ nas.mounts.secondary.name }}"
+    special_time: daily
+  become_user: "{{ nas.user }}"
+  when: nas.mounts.secondary is defined
