@@ -71,8 +71,3 @@
 - name: setup unattended upgrades
   import_tasks: upgrades.yml
   tags: auto-upgrade
-
-- name: set hostname
-  import_tasks: hostname.yml
-  when: not running_in_container
-  tags: nas

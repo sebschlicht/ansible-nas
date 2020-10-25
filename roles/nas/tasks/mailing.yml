@@ -1,6 +1,8 @@
 - name: mailing - install
   apt:
-    name: ssmtp,mailutils
+    name:
+      - ssmtp
+      - mailutils
     cache_valid_time: 600
 
 - name: mailing - configure

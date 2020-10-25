@@ -1,6 +1,6 @@
 # NAS Playbook
 
-This repository contains an Ansible playbook to transform your RaspberryPi 3 (and most UNIX-based systems like Ubuntu) into a NAS, supporting
+This repository contains an Ansible playbook to transform your RaspberryPi (or another system based on Debian/Ubuntu) into a NAS, supporting:
 
 * backups
   * encrypted file transfer (SSH)

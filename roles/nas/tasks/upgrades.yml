@@ -8,11 +8,11 @@
 - name: unattended upgrades - configure
   blockinfile:
     path: "/etc/apt/{{ item.path }}"
-    block: "{{ lookup(item.type, 'etc/apt/{{ item.path }}{{ item.local_path_suffix | default('') }}') }}"
+    block: "{{ lookup(item.type, 'etc/apt/{{ item.path }}{{ (item.type == 'template') | ternary('.j2', omit) }}') }}"
   loop:
-    - { path: apt.conf.d/50unattended-upgrades, type: template, local_path_suffix: .j2 }
+    - { path: apt.conf.d/50unattended-upgrades, type: template }
     - { path: apt.conf.d/20auto-upgrades, type: file }
-    - { path: listchanges.conf, type: template, local_path_suffix: .j2 }
+    - { path: listchanges.conf, type: template }
 
 - name: unattended upgrades - configure timers
   copy:

@@ -4,3 +4,7 @@
     password: "{{ item.initial_password }}"
     groups: "{{ item.groups | default(omit) }}"
   with_items: "{{ users }}"
+
+- name: set hostname
+  import_tasks: hostname.yml
+  when: not running_in_container
