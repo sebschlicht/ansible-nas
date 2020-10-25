@@ -1,13 +1,13 @@
 - name: create mount point with restrictive permissions
   file:
-    path: "{{ nas.mount_base_dir }}/{{ mount.key }}"
+    path: "{{ mounts_base_dir }}/{{ mount.key }}"
     owner: "{{ nas.user.name }}"
     group: "{{ nas.user.name }}"
     mode: "{{ mount_directory_mode }}"
 
 - name: "mount {{ mount.key }} NTFS storage device"
   mount:
-    path: "{{ nas.mount_base_dir }}/{{ mount.key }}"
+    path: "{{ mounts_base_dir }}/{{ mount.key }}"
     src: "UUID={{ mount.value.uuid }}"
     state: mounted
     fstype: "{{ mount.value.fstype | default('ntfs-3g') }}"

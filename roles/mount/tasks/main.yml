@@ -1,6 +1,6 @@
 - name: prepare base mount point
   file:
-    path: "{{ mount_base_dir }}"
+    path: "{{ mounts_base_dir }}"
     state: directory
     owner: "{{ nas.user.name }}"
     group: "{{ nas.user.name }}"

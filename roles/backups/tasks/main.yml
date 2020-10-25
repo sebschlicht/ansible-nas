@@ -1,6 +1,6 @@
 - name: create backup location
   file:
-    path: "{{ nas.backup_location }}"
+    path: "{{ backup_location }}"
     state: directory
     owner: "{{ nas.user.name }}"
     group: "{{ nas.user.name }}"
@@ -10,7 +10,7 @@
 
 - name: create user backup directories and enforce secure permissions
   file:
-    path: "{{ nas.backup_location }}/{{ user.backup_folder_name | default(user.name) }}"
+    path: "{{ backup_location }}/{{ user.backup_folder_name | default(user.name) }}"
     state: directory
     owner: "{{ user.name }}"
     group: "{{ user.name }}"

@@ -10,7 +10,7 @@ nas:
 
 sshd:
   enable_password_authentication: yes
-  allow_users:
+  allow_additional_users:
     - "{{ setup_user }}"
 
 running_in_container: yes

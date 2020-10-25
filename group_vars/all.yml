@@ -1,21 +1,32 @@
-setup_user: sebschlicht
+mounts_base_dir: /mnt/nas
+backup_location: "{{ mounts_base_dir }}/primary/backup"
+running_in_container: no
 
+nextcloud:
+  version: 20.0.0
+  path: /var/www/nextcloud
+  data_path: "{{ mounts_base_dir }}/primary/nextcloud/data"
+
+dynv6:
+  token: "{{ vault_dynv6_token }}"
+
+sshd:
+  allow_additional_users:
+    - "{{ setup_user }}"
+
+
+setup_user: sebschlicht
 nas:
   hostname: pi
   domain: koblenz.dns.sschlicht.de
   user:
     name: pi
-  backup_location: /mnt/nas/primary/backup
 
 mounts:
   primary:
     uuid: 18A302FC66F67B28
 
 mail_recipient: pimon@sschlicht.de
-
-unattended_upgrades:
-  notification_mail_recipient: "{{ mail_recipient }}"
-
 mailing:
   server: mx2f3e.netcup.net:465
   user: pi-ko@sschlicht.de
@@ -23,29 +34,17 @@ mailing:
   password: "{{ vault_mailing_password }}"
   sender_name: "Pi (Koblenz)"
 
-nextcloud:
-  version: 20.0.0
-  path: /var/www/nextcloud
-  data_path: /mnt/nas/primary/nextcloud/data
-
 samba:
   internal_shares:
-    - { name: videos, path: /mnt/nas/primary/videos }
-    - { name: secdev, path: /mnt/nas/primary/secdev }
+    - { name: videos, path: "{{ mounts_base_dir }}/primary/videos" }
+    - { name: secdev, path: "{{ mounts_base_dir }}/primary/secdev" }
   public_shares:
-    - { name: software, path: /mnt/nas/primary/software }
+    - { name: software, path: "{{ mounts_base_dir }}/primary/software" }
 
 minidlna:
   display_name: SchlichtNAS
   directories:
-    - /mnt/nas/primary/videos
-
-dynv6:
-  token: "{{ vault_dynv6_token }}"
-
-sshd:
-  allow_users:
-    - "{{ setup_user }}"
+    - "{{ mounts_base_dir }}/primary/videos"
 
 users:
   - name: sebschlicht
@@ -74,5 +73,3 @@ users:
     initial_password: $6$IieSj6WUcNC$Hlw.UkdS0fqoCaGibNLUCp5sCGm/Jb9KSBWOqtyq6QY.rEPuG5sZyjcYeVqQ0IVdssrUqHK4xgteW3f12S9Fa1
     samba_password: "{{ vault_mas_smbpasswd }}"
     nextcloud_password: "{{ vault_mas_nextcloud_password }}"
-
-running_in_container: no

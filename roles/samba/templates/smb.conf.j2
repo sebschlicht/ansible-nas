@@ -23,7 +23,7 @@
   copy = template-private
   available = yes
   comment = Private share for user '{{ user.name }}'.
-  path = {{ nas.mount_base_dir }}/primary/backup/{{ user.backup_folder_name }}
+  path = {{ backup_location }}/{{ user.backup_folder_name }}
   valid users = {{ user.name }}
   write list = {{ user.name }}
 {% endfor %}
