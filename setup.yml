@@ -16,7 +16,7 @@
       tags: samba
     - role: minidlna
       tags: dlna
-    - role: ufw
-      tags: ufw
     - role: nextcloud
       tags: cloud
+    - role: ufw
+      tags: ufw
