@@ -15,6 +15,10 @@ sshd:
     - "{{ setup_user }}"
 
 
+server_locales:
+  - de_DE.UTF-8
+server_timezone: Europe/Berlin
+
 setup_user: sebschlicht
 nas:
   hostname: pi

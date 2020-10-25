@@ -8,3 +8,12 @@
 - name: set hostname
   import_tasks: hostname.yml
   when: not running_in_container
+
+- name: set timezone
+  timezone:
+    name: "{{ server_timezone }}"
+  
+- name: set locales
+  locale_gen:
+    name: "{{ item }}"
+  with_items: "{{ server_locales }}"
