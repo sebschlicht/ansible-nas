@@ -1,0 +1,23 @@
+- name: install
+  apt:
+    name:
+      - unattended-upgrades
+      - apt-listchanges
+    cache_valid_time: 600
+
+- name: configure apt
+  blockinfile:
+    path: "/etc/apt/{{ item.path }}"
+    block: "{{ lookup(item.type, 'apt/{{ item.path }}{{ item.path_suffix | default('') }}') }}"
+  with_items:
+    - { path: apt.conf.d/50unattended-upgrades, type: template, path_suffix: '.j2' }
+    - { path: apt.conf.d/20auto-upgrades, type: file }
+    - { path: listchanges.conf, type: template, path_suffix: '.j2' }
+
+- name: configure systemd
+  copy:
+    src: "systemd/system/{{ item }}/override.conf"
+    dest: "/etc/systemd/system/{{ item }}/"
+  with_items:
+    - apt-daily.timer.d
+    - apt-daily-upgrade.timer.d

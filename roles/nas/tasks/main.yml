@@ -63,7 +63,3 @@
   loop_control:
     loop_var: user
   tags: nas
-
-- name: setup unattended upgrades
-  import_tasks: upgrades.yml
-  tags: auto-upgrade

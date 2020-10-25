@@ -1,4 +1,5 @@
 dependencies:
+  - role: ssmtp
   - role: php
   - role: mariadb
     vars:
