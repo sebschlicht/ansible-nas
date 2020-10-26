@@ -1,5 +1,6 @@
 dependencies:
   - role: ssmtp
+  - role: fail2ban
   - role: php
   - role: mariadb
     vars:

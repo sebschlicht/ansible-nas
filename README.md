@@ -7,6 +7,7 @@ At the very heart, the term NAS refers to an OpenSSH server to securely backup u
   * encrypted file transfer (SSH)
   * key-based authentication (e.g. [backupnas](https://github.com/sebschlicht/backupnas) for UNIX clients, [FreeFileSync](https://freefilesync.org/) for Windows clients)
   * with all users created automatically and their SSH keys in place
+* with `fail2ban` enabled
 
 However, this playbook supports a variety of services (e.g. Samba, DLNA, Nextcloud) that can be plugged in by specifying one or more [tags](#tags).
 
