@@ -8,7 +8,7 @@
 
 - name: mount external storages
   include_tasks: mount.yml
-  with_items: "{{ mounts }}"
+  with_dict: "{{ mounts }}"
   loop_control:
     loop_var: mount
   when: mounts is defined
