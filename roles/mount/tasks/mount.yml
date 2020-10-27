@@ -11,4 +11,4 @@
     src: "UUID={{ mount.value.uuid }}"
     state: mounted
     fstype: "{{ mount.value.fstype | default('ntfs-3g') }}"
-    opts: "{{ mount.value.opts | default('windows_names,permissions,defaults,noauto,locale=de_DE.utf8') }}"
+    opts: "{{ mount.value.opts | default('defaults,windows_names,permissions,nofail,x-systemd.device-timeout=30,locale=de_DE.utf8') }}"
