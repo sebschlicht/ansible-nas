@@ -77,6 +77,11 @@
     mode: "{{ nc_directory_mode }}"
     state: directory
 
+- include_tasks: disable-user-data.yml
+  vars:
+    nc_user: "{{ nc_admin_name }}"
+  when: nextcloud_download.changed
+
 - name: install
   shell: |
     sudo -u "{{ server_user }}" php {{ nextcloud.path }}/occ maintenance:install \
@@ -86,3 +91,8 @@
       --admin-user '{{ nc_admin_name }}' --admin-pass '{{ nc_admin_password }}'
   when: nextcloud_download.changed
   no_log: yes
+
+- include_tasks: reenable-user-data.yml
+  vars:
+    nc_user: "{{ nc_admin_name }}"
+  when: nextcloud_download.changed

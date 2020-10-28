@@ -1,3 +1,8 @@
+- include_tasks: disable-user-data.yml
+  vars:
+    nc_user: "{{ user.nextcloud_user | default(user.name) }}"
+  when: nextcloud_download.changed
+
 - name: create user for {{ user.full_name }}
   shell: |
     (
@@ -10,6 +15,11 @@
   failed_when:
     - nextcloud_user.rc != 0
     - "'already exists.' not in nextcloud_user.stdout"
+
+- include_tasks: reenable-user-data.yml
+  vars:
+    nc_user: "{{ user.nextcloud_user | default(user.name) }}"
+  when: nextcloud_download.changed
 
 - name: set mail address for newly created user of {{ user.full_name }}
   shell: |

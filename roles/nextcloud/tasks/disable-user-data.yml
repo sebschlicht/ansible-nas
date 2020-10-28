@@ -1,0 +1,6 @@
+- name: "disable files of user {{ nc_user }}"
+  shell: |
+    mv "{{ nextcloud.data_path }}/{{ nc_user }}" "{{ nextcloud.data_path }}/.{{ nc_user }}"
+  register: move_nc_user_files
+  changed_when: move_nc_user_files.rc == 0
+  failed_when: "move_nc_user_files.rc != 0 and 'mv: cannot stat' not in move_nc_user_files.stderr"
