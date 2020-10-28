@@ -1,6 +1,7 @@
 mounts_base_dir: /mnt/nas
 backup_location: "{{ mounts_base_dir }}/primary/backup"
 running_in_container: no
+uninstall: no
 
 nextcloud:
   version: 20.0.0

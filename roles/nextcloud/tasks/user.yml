@@ -1,5 +1,3 @@
-# TODO create and assign (-g) groups via occ
-
 - name: create user for {{ user.full_name }}
   shell: |
     (

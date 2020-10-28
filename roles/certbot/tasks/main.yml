@@ -6,11 +6,11 @@
     cache_valid_time: 600
   register: certbot_install
 
-- name: create certificate (apache)
+- name: create and install certificate (apache)
   shell: "certbot -n --apache --agree-tos -m '{{ certbot.contact_mail_address }}' -d '{{ certbot.domain }}' --redirect"
   when: certbot_install.changed
 
-- name: configure SSL in apache
+- name: configure apache
   import_tasks: apache.yml
 
 - name: schedule certificate renewal attempts

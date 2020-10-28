@@ -8,3 +8,4 @@
     dest: /etc/fail2ban/jail.local
     remote_src: yes
     src: /etc/fail2ban/jail.conf
+    force: no

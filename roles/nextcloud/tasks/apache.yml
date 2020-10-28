@@ -15,21 +15,18 @@
   include_role:
     name: apache2
     tasks_from: site.yml
-  with_items:
-    - nextcloud-le-ssl.conf
-  register: apache_sites
+  with_items: "{{ apache_sites }}"
+  register: place_apache_sites
 
-- name: disable default virtual hosts
+- name: disable default sites
   file:
     path: "/etc/apache2/sites-enabled/{{ item }}"
     state: absent
-  with_items:
-    - 000-default.conf
-    - 000-default-le-ssl.conf
+  with_items: "{{ apache_default_sites }}"
   register: apache_default_sites
 
 - name: restart apache
   service:
     name: apache2
     state: restarted
-  when: apache_sites.changed or apache_default_sites.changed
+  when: place_apache_sites.changed or apache_default_sites.changed

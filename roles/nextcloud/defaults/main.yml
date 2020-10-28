@@ -1,4 +1,8 @@
 server_user: www-data
+apache_default_sites:
+  - 000-default-le-ssl.conf
+apache_sites:
+  - nextcloud-le-ssl.conf
 
 nc_archive_path: /tmp/nextcloud.tar.bz2
 nc_directory_and_file_mode: "u=rw,g=r,o=,a-x+X"
