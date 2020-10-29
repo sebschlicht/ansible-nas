@@ -60,17 +60,17 @@ The inventory `inventories/custom` is intended to be used when running this play
 
 Within this inventory, you *must* adapt the first two files and *should* make use of the third, though it's not technically required:
 
-Path                       | Defines
----------------------------|------------------------------------------------------
-`hosts.yml`                | [hosts](#hosts) that the playbook is running against
-`group_vars/nas/vars.yml`  | [variables](#variables) that are used in the playbook
-`group_vars/nas/vault.yml` | [vault](#vault) for credential variables
+Path                          | Defines
+----------------------------- | -------
+`hosts.yml`                   | [hosts](#hosts) that the playbook is running against
+`group_vars/custom/vars.yml`  | [variables](#variables) that are used in the playbook
+`group_vars/custom/vault.yml` | [vault](#vault) for credential variables
 
 ### Hosts
 
 The hosts file `hosts.yml` defines the machine that will be configured by this playbook.
 
-Simply edit the file and place your machine (e.g. `pi3`) as a NAS host:
+Simply edit the file and place your machine's address/hostname (e.g. `pi3`):
 
     all:
       children:
@@ -80,9 +80,10 @@ Simply edit the file and place your machine (e.g. `pi3`) as a NAS host:
 
 ### Variables
 
-The variables of this playbook are defined in the YAML file `group_vars/nas/vars.yml`.
-They are loosely structured by the different features that this playbook offers and should be quite self-explanatory already.
+All variables of this playbook that have to be customized are defined in the YAML file `group_vars/custom/vars.yml`.
+There are additional variables that usually do not need to be changed but are included in the table below.
 
+The variables are loosely structured by the different features that this playbook offers and should be quite self-explanatory already.
 The table below lists which variables are available for each feature.
 You only need to care about the variables of features that you are going to install.
 
@@ -123,10 +124,11 @@ When operating the NAS behind a router (i.e. firewall), these ports have to be a
 
 In case you insist on using port forwarding, the following ports are used by the respective services:
 
-Service | TCP      | UDP
---------|----------|---------
-Samba   | 139, 445 | 137, 138
-OpenSSH | 22       |
+Service   | TCP      | UDP
+--------- |----------|---------
+Samba     | 139, 445 | 137, 138
+OpenSSH   | 22       |
+Nextcloud | 80, 443  |
 
-These are the default ports.
-Strongly-consider to expose the services at non-default ports to prevent the load and risk that is caused by bots.
+These are the default ports. Strongly-consider to expose the services at non-default ports to prevent the load and risk that is caused by bots.
+An execption are the ports 80 and 443, as they are required for the automatic certificate renewal.
