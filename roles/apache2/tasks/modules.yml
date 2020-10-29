@@ -1,0 +1,9 @@
+- name: get enabled modules
+  shell: "apachectl -M | cut -d' ' -f2"
+  changed_when: no
+  register: apache_enabled_modules
+
+- name: enable required modules
+  shell: "a2enmod {{ item }}"
+  when: not item in apache_enabled_modules.stdout
+  with_items: "{{ modules }}"

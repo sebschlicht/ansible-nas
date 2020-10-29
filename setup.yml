@@ -1,0 +1,24 @@
+---
+- name: Setup the Network Access Storage (NAS)
+  hosts: nas
+  remote_user: "{{ setup_user }}"
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - role: mount
+      tags: mount
+    - role: backups
+      tags: always
+    - role: auto-upgrade
+      tags: auto-upgrade
+    - role: dynv6
+      tags: ddns
+    - role: samba
+      tags: samba
+    - role: minidlna
+      tags: dlna
+    - role: nextcloud
+      tags: cloud
+    - role: ufw
+      tags: ufw

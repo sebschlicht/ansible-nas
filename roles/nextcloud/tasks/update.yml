@@ -1,0 +1,6 @@
+- name: relax file permissions
+  file:
+    path: "{{ nextcloud.path }}"
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
+    recurse: yes

@@ -1,0 +1,14 @@
+- name: prepare base mount point
+  file:
+    path: "{{ mounts_base_dir }}"
+    state: directory
+    owner: "{{ nas.user.name }}"
+    group: "{{ nas.user.name }}"
+    mode: "{{ mount_directory_mode }}"
+
+- name: mount external storages
+  include_tasks: mount.yml
+  with_dict: "{{ mounts }}"
+  loop_control:
+    loop_var: mount
+  when: mounts is defined

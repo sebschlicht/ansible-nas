@@ -1,0 +1,10 @@
+- name: set hostname
+  hostname:
+    name: "{{ nas.hostname }}"
+  when: "ansible_fqdn != nas.hostname"
+
+- name: update hosts file
+  lineinfile:
+    dest: /etc/hosts
+    line: "127.0.1.1\t{{ nas.hostname }}"
+    regexp: "^127.0.1.1"

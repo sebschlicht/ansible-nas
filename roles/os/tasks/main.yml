@@ -1,0 +1,19 @@
+- name: create OS users
+  user:
+    name: "{{ item.name }}"
+    password: "{{ item.initial_password }}"
+    groups: "{{ item.groups | default(omit) }}"
+  with_items: "{{ users }}"
+
+- name: set hostname
+  import_tasks: hostname.yml
+  when: not running_in_container
+
+- name: set timezone
+  timezone:
+    name: "{{ server_timezone }}"
+  
+- name: set locales
+  locale_gen:
+    name: "{{ item }}"
+  with_items: "{{ server_locales }}"

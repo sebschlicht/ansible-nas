@@ -1,0 +1,98 @@
+- name: create installation directory
+  file:
+    path: "{{ nextcloud.path }}"
+    state: directory
+  register: nextcloud_directory
+
+- name: download
+  get_url:
+    url: "https://download.nextcloud.com/server/releases/nextcloud-{{ nextcloud.version }}.tar.bz2"
+    dest: "{{ nc_archive_path }}"
+  when: nextcloud_directory.changed
+  register: nextcloud_download
+
+- name: extract
+  shell: 'tar -xf "{{ nc_archive_path }}" -C "{{ nextcloud.path }}" --strip 1'
+  when: nextcloud_download.changed
+
+- name: set Nextcloud folder permissions
+  file:
+    path: "{{ nextcloud.path }}"
+    owner: root
+    group: "{{ server_user }}"
+    mode: "{{ nc_directory_mode }}"
+  when: nextcloud_download.changed
+
+- name: create lazy-initialized folders
+  file:
+    path: "{{ nextcloud.path }}/{{ item }}"
+    state: directory
+  with_items:
+    - assets
+  when: nextcloud_download.changed
+
+- name: collect Nextcloud files
+  find:
+    path: "{{ nextcloud.path }}"
+    file_type: any
+    hidden: yes
+    excludes:
+      - .htaccess
+      - occ
+  changed_when: no
+  register: nc_files
+  when: nextcloud_download.changed
+
+- name: set permissions of Nextcloud files and folders
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
+    mode: "{{ nc_directory_and_file_mode }}"
+    recurse: "{{ item.isdir }}"
+  with_items: "{{ nc_files.files }}"
+  when: nextcloud_download.changed
+
+- name: set permissions of Nextcloud binaries
+  file:
+    path: "{{ nextcloud.path }}/occ"
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
+    mode: "{{ nc_binary_mode }}"
+  when: nextcloud_download.changed
+
+- name: set permissions of htaccess
+  file:
+    path: "{{ nextcloud.path }}/.htaccess"
+    owner: root
+    group: "{{ server_user }}"
+    mode: "{{ nc_htaccess_mode }}"
+  when: nextcloud_download.changed
+
+- name: create (external) data directory
+  file:
+    path: "{{ nextcloud.data_path }}"
+    owner: "{{ server_user }}"
+    group: "{{ server_user }}"
+    mode: "{{ nc_directory_mode }}"
+    state: directory
+
+- include_tasks: disable-user-data.yml
+  vars:
+    nc_user: "{{ nc_admin_name }}"
+  when: nextcloud_download.changed
+
+- name: install
+  shell: |
+    sudo -u "{{ server_user }}" php {{ nextcloud.path }}/occ maintenance:install \
+      --data-dir '{{ nextcloud.data_path }}' \
+      --database 'mysql' --database-name '{{ db_name }}' \
+      --database-user '{{ db_user_name }}' --database-pass '{{ db_user_password }}' \
+      --admin-user '{{ nc_admin_name }}' --admin-pass '{{ nc_admin_password }}'
+  when: nextcloud_download.changed
+  no_log: yes
+
+- include_tasks: reenable-user-data.yml
+  vars:
+    nc_user: "{{ nc_admin_name }}"
+  when: nextcloud_download.changed

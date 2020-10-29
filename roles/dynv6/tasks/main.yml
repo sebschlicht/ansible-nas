@@ -7,7 +7,7 @@
 - name: register cron jobs
   cron:
     name: "dynv6 ({{ item }})"
-    job: "dynv6 {{ dynv6.hostname }}"
+    job: "dynv6 {{ dynv6.hostname | default(nas.domain) }}"
     special_time: "{{ item }}"
     user: "{{ nas.user.name }}"
   loop:

@@ -1,4 +1,4 @@
-AllowUsers {{ sshd.allow_users | union(users | map(attribute='name') | list) | unique | join(' ') }}
+AllowUsers {{ sshd.allow_additional_users | union(users | map(attribute='name') | list) | unique | join(' ') }}
 PermitRootLogin no
 PrintLastLog no
 PasswordAuthentication {{ 'yes' if (sshd.enable_password_authentication | default('false') | bool) else 'no' }}

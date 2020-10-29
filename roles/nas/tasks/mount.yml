@@ -1,9 +1,0 @@
-- name: "mount {{ mount.key }} storage device"
-  mount:
-    path: "{{ nas.mount_base_dir }}/{{ mount.value.name }}"
-    src: "UUID={{ mount.value.uuid }}"
-    state: mounted
-    fstype: "{{ mount.value.fstype | default('ntfs-3g') }}"
-    opts: "{{ mount.value.opts | default('windows_names,permissions,defaults,noauto,locale=de_DE.utf8') }}"
-  when: mount.value.uuid is defined
-  tags: nas

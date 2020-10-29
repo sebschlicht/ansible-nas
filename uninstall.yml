@@ -1,0 +1,12 @@
+- name: Tear down the Network Access Storage (NAS)
+  hosts: nas
+  remote_user: "{{ setup_user }}"
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    uninstall: yes
+  tasks:
+    - import_role:
+        name: nextcloud
+        tasks_from: uninstall.yml
+      tags: cloud

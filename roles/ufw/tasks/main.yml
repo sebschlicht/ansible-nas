@@ -17,13 +17,13 @@
   ufw:
     rule: limit
     name: OpenSSH
-  tags: sshd
 
 - name: allow access to Samba
   ufw:
     rule: allow
     name: Samba
-  tags: smb
+  when: "('samba' in ansible_run_tags and 'ufw' in ansible_run_tags) or ('all' in ansible_run_tags)"
+  register: ufw_samba
 
 - name: allow DLNA communication
   ufw:
@@ -35,10 +35,20 @@
       proto: tcp
     - to_port: 1900
       proto: udp
+  when: "('dlna' in ansible_run_tags and 'ufw' in ansible_run_tags) or ('all' in ansible_run_tags)"
+  register: ufw_dlna
+
+- name: allow HTTP(S) communication
+  ufw:
+    rule: allow
+    proto: tcp
+    to_port: 80,443
+  when: "('cloud' in ansible_run_tags and 'ufw' in ansible_run_tags) or ('all' in ansible_run_tags)"
+  register: ufw_http
 
 - name: enable/reload service
   service:
     name: ufw
-    state: reloaded
+    state: "{{ (ufw_samba.changed or ufw_dlna.changed or ufw_http.changed) | ternary('restarted', omit) }}"
     enabled: yes
   when: not running_in_container
