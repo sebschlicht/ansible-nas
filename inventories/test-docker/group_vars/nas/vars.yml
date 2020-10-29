@@ -1,12 +1,7 @@
 nas:
   hostname: pi
   user:
-    name: nas
-  mount_base_dir: /mnt/nas
-  mounts:
-    primary:
-      name: primary
-      # omit UUID to refer to local directory
+    name: pi
 
 sshd:
   enable_password_authentication: yes
