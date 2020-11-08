@@ -33,11 +33,12 @@ mounts:
 
 mail_recipient: pimon@sschlicht.de
 mailing:
-  server: mx2f3e.netcup.net:465
+  server: mx2f3e.netcup.net
+  port: 465
   user: pi-ko@sschlicht.de
-  address: pi-ko@sschlicht.de
+  from_address: pi-ko@sschlicht.de
   password: "{{ vault_mailing_password }}"
-  sender_name: "Pi (Koblenz)"
+  sender_name: "Pi4 (Koblenz)"
 
 samba:
   internal_shares:

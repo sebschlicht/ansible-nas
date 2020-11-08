@@ -1,0 +1,1 @@
+mailing_from: "{{ mailing.sender_name }} <{{ mailing.from_address }}>"

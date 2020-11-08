@@ -1,0 +1,15 @@
+defaults
+auth            on
+tls             on
+logfile         /var/log/msmtp.log
+maildomain      {{ nas.hostname }}
+
+account         default
+host            {{ mailing.server }}
+port            {{ mailing.port }}
+from            {{ mailing_from }}
+user            {{ mailing.user }}
+password        {{ mailing.password }}
+tls_starttls    off
+
+aliases /etc/aliases

@@ -12,7 +12,12 @@
   with_items:
     - { path: apt.conf.d/50unattended-upgrades, type: template, path_suffix: '.j2' }
     - { path: apt.conf.d/20auto-upgrades, type: file }
-    - { path: listchanges.conf, type: template, path_suffix: '.j2' }
+
+- name: configure apt
+  lineinfile:
+    path: "/etc/apt/listchanges.conf"
+    regexp: "^email_address="
+    line: "email_address={{ unattended_upgrades_mail_recipient }}"
 
 - name: configure systemd
   copy:
