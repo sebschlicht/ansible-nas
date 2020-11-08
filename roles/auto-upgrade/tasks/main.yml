@@ -5,15 +5,24 @@
       - apt-listchanges
     cache_valid_time: 600
 
-- name: configure apt
+- name: configure
   blockinfile:
-    path: "/etc/apt/{{ item.path }}"
-    block: "{{ lookup(item.type, 'apt/{{ item.path }}{{ item.path_suffix | default('') }}') }}"
+    path: "/etc/{{ item }}"
+    block: "{{ lookup('template', '{{ item }}.j2') }}"
   with_items:
-    - { path: apt.conf.d/50unattended-upgrades, type: template, path_suffix: '.j2' }
-    - { path: apt.conf.d/20auto-upgrades, type: file }
+    - apt/apt.conf.d/50unattended-upgrades
 
-- name: configure apt
+- name: configure upgrader
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - apt/apt.conf.d/20auto-upgrades
+
+- name: configure change list receiver
   lineinfile:
     path: "/etc/apt/listchanges.conf"
     regexp: "^email_address="
