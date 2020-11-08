@@ -21,22 +21,21 @@ While most configuration options are hard-coded to fit the recommendations for t
 ## Tags
 
 * `mount`: automatically mount an external hard drive to extent storage capabilities
-  * all user data will be stored on this external drive
 * `cloud`: [Nextcloud](https://nextcloud.com/) server to upload and share files in a personal cloud
   * encrypted file transfer (HTTPS)
     * automatically renewed SSL certificates (Let's Encrypt)
-    * Mozilla's intermediate SSL configuration for secure but still largely compatible communication
-  * automatically installed and configured
+    * Mozilla's intermediate SSL configuration (secure but aiming for compatibility)
+  * fully installed and configured
     * including all required components and users
     * applying performance recommendations and hardening
 * `samba`: [Samba](https://www.samba.org/) server to access stored files from any desktop or mobile device
-  * password authentication for users, password-free public shares for guests
+  * password authentication for users, optional guest shares
   * *unencrypted file transfer*
 * `dlna`: [DLNA](https://en.wikipedia.org/wiki/Digital_Living_Network_Alliance) server to access stored media files from smartTVs etc.
   * automatically discover and play videos and/or music
   * *unencrypted file transfer*
 * `ddns`: dynamic DNS update client
-  * hourly (and when rebooted) reports the device's IP address to DynV6, to have it accessible via DNS (e.g. my-nas-device.dynv6.net)
+  * hourly (and on reboot) reports the device's IP address to DynV6, to have it accessible via a domain
 * `auto-upgrade`: keep installed software up-to-date
 * `ufw`: firewall to restrict incoming traffic to the selected services (i.e. specified tags)
 

@@ -1,19 +1,22 @@
 - name: install
   apt:
     name:
-      - ssmtp
-      - mailutils
+      - msmtp
+      - msmtp-mta
+      - bsd-mailx
     cache_valid_time: 600
 
 - name: configure
-  blockinfile:
-    path: /etc/ssmtp/ssmtp.conf
-    block: "{{ lookup('template', 'ssmtp.conf.j2') }}"
+  template:
+    src: "msmtprc.j2"
+    dest: /etc/msmtprc
+    owner: root
+    mode: 0600
 
 - name: set alias
   lineinfile:
-    path: /etc/ssmtp/revaliases
-    line: "root:{{ mailing.address }}:{{ mailing.server }}"
+    path: /etc/aliases
+    line: "root:{{ mailing_from }}"
   register: alias
 
 - name: set root name (mail sender)
