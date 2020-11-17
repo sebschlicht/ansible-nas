@@ -23,7 +23,7 @@
 
 - name: configure (fpm)
   blockinfile:
-    block: "{{ lookup('file', 'php/php.ini') }}"
+    block: "{{ lookup('template', 'php/php.ini') }}"
     dest: "/etc/php/7.3/fpm/php.ini"
     marker: "; {mark} ANSIBLE MANAGED BLOCK"
 
