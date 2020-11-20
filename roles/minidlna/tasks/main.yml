@@ -1,24 +1,20 @@
 - name: install
   apt:
     name: minidlna
-    state: present
-  tags: minidlna
+    cache_valid_time: 600
 
 - name: configure
   blockinfile:
     path: /etc/minidlna.conf
-    block: "{{ lookup('file', 'minidlna.conf') }}"    
-  tags: minidlna
+    block: "{{ lookup('template', 'minidlna.conf.j2') }}"
 
-- name: configure user access
+- name: add miniDLNA user to NAS group
   user:
     name: minidlna
     groups: "{{ nas.user.name }}"
-  tags: minidlna
 
 - name: start
   service:
     name: minidlna
     state: started
     enabled: yes
-  tags: minidlna

@@ -1,0 +1,24 @@
+- name: install
+  apt:
+    name:
+      - msmtp
+      - msmtp-mta
+      - bsd-mailx
+    cache_valid_time: 600
+
+- name: configure
+  template:
+    src: "msmtprc.j2"
+    dest: /etc/msmtprc
+    owner: root
+    mode: 0600
+
+- name: set alias
+  lineinfile:
+    path: /etc/aliases
+    line: "root:{{ mailing_from }}"
+  register: alias
+
+- name: set root name (mail sender)
+  shell: "chfn -f '{{ mailing.sender_name }}' root"
+  when: alias.changed

@@ -1,0 +1,47 @@
+## Templates
+[template-private]
+  create mask = 0644
+  directory mask = 0755
+  guest ok = no
+  available = no
+[template-internal]
+  writeable = yes
+  create mask = 0666
+  directory mask = 0777
+  force user = {{ nas.user.name }}
+  force group = {{ nas.user.name }}
+  guest ok = no
+  available = no
+[template-public]
+  writeable = no
+  force group = {{ nas.user.name }}
+  guest ok = yes
+
+## Private Shares
+{% for user in users %}
+[{{ user.name }}]
+  copy = template-private
+  available = yes
+  comment = Private share for user '{{ user.name }}'.
+  path = {{ backup_location }}/{{ user.backup_folder_name }}
+  valid users = {{ user.name }}
+  write list = {{ user.name }}
+{% endfor %}
+
+## Internal Shares
+{% for share in samba.internal_shares %}
+[{{ share.name }}]
+  copy = template-internal
+  available = yes
+  comment = Internal share for {{ share.name }}.
+  path = {{ share.path }}
+{% endfor %}
+
+## Public shares
+{% for share in samba.public_shares %}
+[{{ share.name }}]
+  copy = template-public
+  available = yes
+  comment = Public share for {{ share.name }}.
+  path = {{ share.path }}
+{% endfor %}

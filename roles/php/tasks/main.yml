@@ -1,0 +1,60 @@
+- name: install
+  apt:
+    name:
+      - php7.3            # TODO potentially obsolete (maybe still required for php-cli)
+      - php7.3-common     # unknown
+      - php7.3-curl
+      - php7.3-dom
+      - php7.3-gd
+      - php7.3-intl       # translation performance
+      - php7.3-mbstring
+      - php7.3-mysql
+      - php7.3-xml
+      - php7.3-zip
+      - php-redis         # caching
+      - redis-server
+      - php-apcu
+      - php-imagick       # previews
+      - php7.3-fpm        # threading performance
+      - php7.3-bcmath     # Nextcloud performance recommendation
+      - php7.3-gmp        # Nextcloud performance recommendation
+    cache_valid_time: 600
+  register: php_install
+
+- name: configure (fpm)
+  blockinfile:
+    block: "{{ lookup('template', 'php/php.ini') }}"
+    dest: "/etc/php/7.3/fpm/php.ini"
+    marker: "; {mark} ANSIBLE MANAGED BLOCK"
+
+- name: configure (fpm-pool)
+  blockinfile:
+    block: "{{ lookup('file', 'php/php-fpm.www.conf') }}"
+    dest: "/etc/php/7.3/fpm/pool.d/www.conf"
+    marker: "; {mark} ANSIBLE MANAGED BLOCK"
+
+- name: switch from mod_php to php-fpm
+  shell: |
+    a2enmod proxy_fcgi setenvif;
+    a2enconf php7.3-fpm;
+    a2dismod php7.3 mpm_prefork;
+    a2enmod mpm_event http2
+  when: php_install.changed
+
+- name: configure redis
+  blockinfile:
+    block: "{{ lookup('file', 'redis/redis.conf') }}"
+    dest: "/etc/redis/redis.conf"
+  register: redis_config
+
+- name: add server user to redis group
+  user:
+    name: "{{ server_user }}"
+    groups: redis
+    append: yes
+  
+- name: restart redis
+  service:
+    name: redis-server
+    state: restarted
+  when: php_install.changed or redis_config.changed

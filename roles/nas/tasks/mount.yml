@@ -1,9 +1,0 @@
-- name: mount '{{ mount.name }}'
-  mount:
-    path: "{{ mount_base_dir }}/{{ mount.name }}"
-    src: "UUID={{ mount.uuid }}"
-    state: mounted
-    fstype: ntfs-3g
-    opts: windows_names,permissions,defaults,noauto,locale=de_DE.utf8
-  when: "mount.uuid is defined"
-  tags: nas

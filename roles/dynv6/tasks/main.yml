@@ -3,14 +3,13 @@
     src: dynv6.sh.j2
     dest: /usr/local/bin/dynv6
     mode: 0755
-  tags: dynv6
 
-- name: register cronjobs
+- name: register cron jobs
   cron:
     name: "dynv6 ({{ item }})"
-    job: "dynv6 {{ dynv6.hostname }}"
+    job: "dynv6 {{ dynv6.hostname | default(nas.domain) }}"
     special_time: "{{ item }}"
+    user: "{{ nas.user.name }}"
   loop:
     - hourly
     - reboot
-  tags: dynv6

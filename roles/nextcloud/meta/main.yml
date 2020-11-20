@@ -1,0 +1,13 @@
+dependencies:
+  - role: ssmtp
+    when: not uninstall
+  - role: fail2ban
+    when: not uninstall
+  - role: php
+    when: not uninstall
+  - role: mariadb
+    vars:
+      mariadb:
+        root_user:
+          password: "{{ db_root_password }}"
+    when: not uninstall

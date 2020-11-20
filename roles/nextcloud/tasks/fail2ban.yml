@@ -1,0 +1,17 @@
+- name: configure filter for Nextcloud
+  copy:
+    src: fail2ban/filter.d/nextcloud.conf
+    dest: /etc/fail2ban/filter.d/
+  register: nextcloud_f2b_filter
+
+- name: configure jail for Nextcloud
+  template:
+    src: fail2ban/jail.d/nextcloud.local
+    dest: /etc/fail2ban/jail.d/
+  register: nextcloud_f2b_jail
+
+- name: restart
+  service:
+    name: fail2ban
+    state: restarted
+  when: nextcloud_f2b_filter.changed or nextcloud_f2b_jail.changed

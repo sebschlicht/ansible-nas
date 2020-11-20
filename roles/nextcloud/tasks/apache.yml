@@ -1,0 +1,32 @@
+- name: ensure required Apache modules are enabled
+  import_role:
+    name: apache2
+    tasks_from: modules.yml
+  vars:
+    modules:
+      - rewrite
+      - headers
+      - env
+      - dir
+      - mime
+
+# TODO what happens with the created virtual hosts when the certificate IS renewed?
+- name: create and enable virtual hosts
+  include_role:
+    name: apache2
+    tasks_from: site.yml
+  with_items: "{{ apache_sites }}"
+  register: place_apache_sites
+
+- name: disable default sites
+  file:
+    path: "/etc/apache2/sites-enabled/{{ item }}"
+    state: absent
+  with_items: "{{ apache_default_sites }}"
+  register: apache_default_sites
+
+- name: restart apache
+  service:
+    name: apache2
+    state: restarted
+  when: place_apache_sites.changed or apache_default_sites.changed

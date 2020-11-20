@@ -1,0 +1,14 @@
+- name: fill database
+  import_tasks: mariadb.yml
+
+- name: configure Apache
+  import_tasks: apache.yml
+
+- name: install Nextcloud
+  import_tasks: install.yml
+
+- name: configure Nextcloud
+  import_tasks: config.yml
+
+- name: configure fail2ban
+  import_tasks: fail2ban.yml

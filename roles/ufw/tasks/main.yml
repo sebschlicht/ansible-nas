@@ -1,0 +1,54 @@
+- name: install
+  apt:
+    name: ufw
+    cache_valid_time: 600
+
+- name: configure defaults
+  ufw:
+    default: "{{ item.default | default(omit) }}"
+    direction: "{{ item.direction | default(omit) }}"
+  with_items:
+    - default: deny
+      direction: incoming
+    - default: allow
+      direction: outgoing
+    
+- name: allow SSH communication
+  ufw:
+    rule: limit
+    name: OpenSSH
+
+- name: allow access to Samba
+  ufw:
+    rule: allow
+    name: Samba
+  when: "('samba' in ansible_run_tags and 'ufw' in ansible_run_tags) or ('all' in ansible_run_tags)"
+  register: ufw_samba
+
+- name: allow DLNA communication
+  ufw:
+    rule: allow
+    proto: "{{ item.proto }}"
+    to_port: "{{ item.to_port }}"
+  with_items:
+    - to_port: 8200
+      proto: tcp
+    - to_port: 1900
+      proto: udp
+  when: "('dlna' in ansible_run_tags and 'ufw' in ansible_run_tags) or ('all' in ansible_run_tags)"
+  register: ufw_dlna
+
+- name: allow HTTP(S) communication
+  ufw:
+    rule: allow
+    proto: tcp
+    to_port: 80,443
+  when: "('cloud' in ansible_run_tags and 'ufw' in ansible_run_tags) or ('all' in ansible_run_tags)"
+  register: ufw_http
+
+- name: enable/reload service
+  service:
+    name: ufw
+    state: "{{ (ufw_samba.changed or ufw_dlna.changed or ufw_http.changed) | ternary('restarted', omit) }}"
+    enabled: yes
+  when: not running_in_container

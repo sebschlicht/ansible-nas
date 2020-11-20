@@ -1,0 +1,10 @@
+- name: "create site {{ item }}"
+  template:
+    dest: /etc/apache2/sites-available/
+    src: "apache2/sites/{{ item }}"
+
+- name: "enable site {{ item }}"
+  file:
+    path: "/etc/apache2/sites-enabled/{{ item }}"
+    state: link
+    src: "/etc/apache2/sites-available/{{ item }}"

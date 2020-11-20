@@ -1,0 +1,11 @@
+- name: install
+  apt:
+    name: fail2ban
+    cache_valid_time: 600
+
+- name: configure
+  copy:
+    dest: /etc/fail2ban/jail.local
+    remote_src: yes
+    src: /etc/fail2ban/jail.conf
+    force: no

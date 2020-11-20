@@ -1,0 +1,2 @@
+nas_backup_directory_mode: 0755
+nas_personal_backup_directory_mode: 0750

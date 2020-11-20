@@ -1,10 +1,81 @@
+mounts_base_dir: /mnt/nas
+backup_location: "{{ mounts_base_dir }}/primary/backup"
+running_in_container: no
+uninstall: no
+
+nextcloud:
+  version: 20.0.0
+  path: /var/www/nextcloud
+  data_path: "{{ mounts_base_dir }}/primary/nextcloud/data"
+
+dynv6:
+  token: "{{ vault_dynv6_token }}"
+
+sshd:
+  allow_additional_users:
+    - "{{ setup_user }}"
+
+
+server_locales:
+  - de_DE.UTF-8
+server_timezone: Europe/Berlin
+
+setup_user: sebschlicht
+nas:
+  hostname: pi
+  domain: koblenz.dns.sschlicht.de
+  user:
+    name: pi
+
+mounts:
+  primary:
+    uuid: 18A302FC66F67B28
+
+mail_recipient: pimon@sschlicht.de
+mailing:
+  server: mx2f3e.netcup.net
+  port: 465
+  user: pi-ko@sschlicht.de
+  from_address: pi-ko@sschlicht.de
+  password: "{{ vault_mailing_password }}"
+  sender_name: "Pi4 (Koblenz)"
+
+samba:
+  internal_shares:
+    - { name: videos, path: "{{ mounts_base_dir }}/primary/videos" }
+    - { name: secdev, path: "{{ mounts_base_dir }}/primary/secdev" }
+  public_shares:
+    - { name: software, path: "{{ mounts_base_dir }}/primary/software" }
+
+minidlna:
+  display_name: SchlichtNAS
+  directories:
+    - "{{ mounts_base_dir }}/primary/videos"
+
 users:
   - name: sebschlicht
-    smbpasswd: smbtest
-    smbdir: sebastian
+    full_name: Sebastian Schlicht
+    mail_address: "{{ vault_sebschlicht_mail_address }}"
+    backup_folder_name: sebastian
+    initial_password: $6$bvWKhsKfYQL8FH$FBXZZLp2ylLIEFjpj6c7vq.pCaJCH3nn3daYG3kEAhfhOxPoE6Y1kIux9VAiTQ8m1BPbmdYQ7OnCJNgm8h9VE1
+    groups: sudo
+    samba_password: "{{ vault_sebschlicht_smbpasswd }}"
+    nextcloud_user: sebastian
+    nextcloud_password: "{{ vault_sebschlicht_nextcloud_password }}"
+    authorized_keys:
+      - id_sebschlicht.pub
+      - id_pi_windows.pub
   - name: isspek
-    smbpasswd: smbtest
-    smbdir: ipek
+    full_name: Ipek Baris Schlicht
+    mail_address: "{{ vault_isspek_mail_address }}"
+    backup_folder_name: ipek
+    initial_password: $6$AupSaBcLM5QMskO$FOVMKV.xMaNlcGsabZEoI7Hdmk9XxVF0bPBbcn2hsUizL0NQeOiIbdtfZGXDowKaP9acY5iDjIp13Y8upcvRr/
+    samba_password: "{{ vault_isspek_smbpasswd }}"
+    nextcloud_password: "{{ vault_isspek_nextcloud_password }}"
   - name: mas
-    smbpasswd: smbtest
-    smbdir: andrea-michael
+    full_name: Michael und Andrea Schlicht
+    mail_address: "{{ vault_mas_mail_address }}"
+    backup_folder_name: andrea-michael
+    initial_password: $6$IieSj6WUcNC$Hlw.UkdS0fqoCaGibNLUCp5sCGm/Jb9KSBWOqtyq6QY.rEPuG5sZyjcYeVqQ0IVdssrUqHK4xgteW3f12S9Fa1
+    samba_password: "{{ vault_mas_smbpasswd }}"
+    nextcloud_password: "{{ vault_mas_nextcloud_password }}"

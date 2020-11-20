@@ -1,0 +1,37 @@
+- name: install
+  apt:
+    name:
+      - unattended-upgrades
+      - apt-listchanges
+    cache_valid_time: 600
+
+- name: configure
+  blockinfile:
+    path: "/etc/{{ item }}"
+    block: "{{ lookup('template', '{{ item }}.j2') }}"
+  with_items:
+    - apt/apt.conf.d/50unattended-upgrades
+
+- name: configure upgrader
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - apt/apt.conf.d/20auto-upgrades
+
+- name: configure change list receiver
+  lineinfile:
+    path: "/etc/apt/listchanges.conf"
+    regexp: "^email_address="
+    line: "email_address={{ unattended_upgrades_mail_recipient }}"
+
+- name: configure systemd
+  copy:
+    src: "systemd/system/{{ item }}/override.conf"
+    dest: "/etc/systemd/system/{{ item }}/"
+  with_items:
+    - apt-daily.timer.d
+    - apt-daily-upgrade.timer.d

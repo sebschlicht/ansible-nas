@@ -1,3 +1,0 @@
-Unattended-Upgrade::Mail "pimon@sschlicht.de";
-Unattended-Upgrade::Automatic-Reboot "true";
-Unattended-Upgrade::Automatic-Reboot-Time "06:00";

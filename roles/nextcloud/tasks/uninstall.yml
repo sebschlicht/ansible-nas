@@ -1,0 +1,50 @@
+- name: remove database user
+  mysql_user:
+    name: "{{ db_user_name }}"
+    host: localhost
+    state: absent
+    login_password: "{{ db_root_password }}"
+  no_log: yes
+
+- name: remove database
+  mysql_db:
+    name: "{{ db_name }}"
+    state: absent
+    login_password: "{{ db_root_password }}"
+
+- name: re-enable default sites
+  file:
+    path: "/etc/apache2/sites-enabled/{{ item }}"
+    src: "/etc/apache2/sites-available/{{ item }}"
+    state: link
+  with_items: "{{ apache_default_sites }}"
+  register: enable_default_sites
+
+- name: remove sites
+  file:
+    path: "/etc/apache2/sites-enabled/{{ item }}"
+    state: absent
+  with_items: "{{ apache_sites }}"
+  register: remove_sites
+
+- name: reload apache
+  service:
+    name: apache2
+    state: reloaded
+  when: enable_default_sites.changed or remove_sites.changed
+
+- name: remove cron job
+  cron:
+    name: nextcloud
+    user: "{{ server_user }}"
+    state: absent
+
+- name: remove Nextcloud files
+  file:
+    path: "{{ nextcloud.path }}"
+    state: absent
+
+- name: remove Nextcloud archive
+  file:
+    path: "{{ nc_archive_path }}"
+    state: absent
