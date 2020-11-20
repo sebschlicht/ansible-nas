@@ -86,25 +86,25 @@ The variables are loosely structured by the different features that this playboo
 The table below lists which variables are available for each feature.
 You only need to care about the variables of features that you are going to install.
 
-Role | Variable | Description
----- | -------- | -----------
-*    | `setup_user`             | remote user to login and use for the setup process
-*    | `nas.hostname`           | desired hostname of the NAS
-*    | `nas.user.name`          | name of the artificial NAS user that is used for service tasks (will be created if missing)
-*    | `backup_location`        | path to store all user data at. defaults to the primary mount, if specified
-*    | `sshd.allow_additional_users`         | list of users that are allowed to SSH into the NAS, in addition to the individual users
-*    | `sshd.enable_password_authentication` | flag to enable the password-based authentication for SSH clients (default: `false`). strongly discouraged, specify authorized keys per user instead
-*    | `users`                  | list of individual users, each having a user `name`, an `initial_password` hash, a `nextcloud_password` and a `samba_password` (if the respective features are used). you may also specify a `backup_folder_name` (defaults to username) and additional group assignments (`groups`) on the OS level. you may as well specify a list of `authorized_keys` for passwordless SSH access
-mount | `mounts_base_dir`       | directory for mount points for external storage devices
-mount | `mounts.primary.*`      | primary mount point that all user data will be stored at, by default. mounted via the `uuid` field. use `fstype` and `opts` to specify the filesystem and options of the mount (defaults fit NTFS-formatted drives)
-mount | `mounts.secondary.*`    | optional secondary mount point, that the primary mount point will be mirrored to (same configuration options available)
-auto-upgrade, cloud | `mailing.*`      | `server`, `user` name, `address`, `password` and `sender_name` for the mail account to be used for sending mails (e.g. notifications, password resets)
-auto-upgrade, cloud | `mail_recipient` | recipient for administrator mails (e.g. performed upgrades)
-cloud | `nas.domain`            | public domain to access the machine
-cloud | `dynv6.token`           | token to update the current IP address of the NAS domain on DynV6
-samba | `samba.internal_shares` | internal Samba shares, each having a `name` and a `path`, that are accessible with any account
-samba | `samba.public_shares`   | public Samba shares, each having a `name` and a `path`, that are accessible even without an account
-dlna  | `minidlna.*`            | `display_name` to be shown in client devices, `directories` to list paths that should be accessible for clients
+| Role | Variable | Description
+| ---- | -------- | -----------
+| *    | `setup_user`             | remote user to login and use for the setup process
+| *    | `nas.hostname`           | desired hostname of the NAS
+| *    | `nas.user.name`          | name of the artificial NAS user that is used for service tasks (will be created if missing)
+| *    | `backup_location`        | path to store all user data at. defaults to the primary mount, if specified
+| *    | `sshd.allow_additional_users`         | list of users that are allowed to SSH into the NAS, in addition to the individual users
+| *    | `sshd.enable_password_authentication` | flag to enable the password-based authentication for SSH clients (default: `false`). strongly discouraged, specify authorized keys per user instead
+| *    | `users`                  | list of individual users, each having a user `name`, an `initial_password` hash, a `nextcloud_password` and a `samba_password` (if the respective features are used). you may also specify a `backup_folder_name` (defaults to username) and additional group assignments (`groups`) on the OS level. you may as well specify a list of `authorized_keys` for passwordless SSH access
+| mount | `mounts_base_dir`       | directory for mount points for external storage devices
+| mount | `mounts.primary.*`      | primary mount point that all user data will be stored at, by default. mounted via the `uuid` field. use `fstype` and `opts` to specify the filesystem and options of the mount (defaults fit NTFS-formatted drives)
+| mount | `mounts.secondary.*`    | optional secondary mount point, that the primary mount point will be mirrored to (same configuration options available)
+| auto-upgrade, cloud | `mailing.*` | `server`, `user` name, `address`, `password` and `sender_name` for the mail account to be used for sending mails (e.g. notifications, password resets)
+| auto-upgrade, cloud | `mail_recipient` | recipient for administrator mails (e.g. performed upgrades)
+| cloud | `nas.domain`            | public domain to access the machine
+| cloud | `dynv6.token`           | token to update the current IP address of the NAS domain on DynV6
+| samba | `samba.internal_shares` | internal Samba shares, each having a `name` and a `path`, that are accessible with any account
+| samba | `samba.public_shares`   | public Samba shares, each having a `name` and a `path`, that are accessible even without an account
+| dlna  | `minidlna.*`            | `display_name` to be shown in client devices, `directories` to list paths that should be accessible for clients
 
 ### Vault
 
