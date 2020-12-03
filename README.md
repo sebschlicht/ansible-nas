@@ -47,11 +47,11 @@ In order to apply this playbook to one of your machines, there are basically two
 1. Run the playbook:
    1. Use the named [tags](#tags) to precisely choose which services to install, e.g. only Samba and Nextcloud:
 
-       ansible-playbook -i inventories/custom setup.yml --tags samba,nextcloud
+          ansible-playbook -i inventories/custom setup.yml --tags samba,nextcloud
 
    1. Omit tags to install all available services:
 
-       ansible-playbook -i inventories/custom setup.yml
+          ansible-playbook -i inventories/custom setup.yml
 
 ## Inventory Configuration
 

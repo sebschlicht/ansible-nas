@@ -10,7 +10,7 @@
       tags: mount
     - role: backups
       tags: always
-    - role: auto-upgrade
+    - role: unattended-upgrades
       tags: auto-upgrade
     - role: dynv6
       tags: ddns
