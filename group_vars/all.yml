@@ -4,7 +4,7 @@ running_in_container: no
 uninstall: no
 
 nextcloud:
-  version: 20.0.0
+  version: 20.0.4
   path: /var/www/nextcloud
   data_path: "{{ mounts_base_dir }}/primary/nextcloud/data"
 
@@ -29,7 +29,7 @@ nas:
 
 mounts:
   primary:
-    uuid: 18A302FC66F67B28
+    uuid: 4C1E05C31E05A6D4
 
 mail_recipient: pimon@sschlicht.de
 mailing:

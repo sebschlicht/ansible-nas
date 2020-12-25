@@ -11,6 +11,7 @@
     owner: "{{ nas.user.name }}"
     group: "{{ nas.user.name }}"
     mode: "{{ mount_directory_mode }}"
+    state: directory
   when: mounted.rc != 0
 
 - name: "mount {{ mount.key }} NTFS storage device"
