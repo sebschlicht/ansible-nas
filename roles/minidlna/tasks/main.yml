@@ -13,6 +13,14 @@
     name: minidlna
     groups: "{{ nas.user.name }}"
 
+- name: schedule daily re-scan
+  cron:
+    user: minidlna
+    name: reload minidlna for full re-scan
+    job: /usr/sbin/minidlnad -R
+    hour: 6
+    minute: 0
+
 - name: start
   service:
     name: minidlna
