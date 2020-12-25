@@ -68,6 +68,13 @@ If you use tags to selectively enable features, you only have to adapt their var
 
 Check existing files for available variables and their meaning.
 
+## Scheduled Jobs
+
+| Interval        | Description                 | Active when feature selected |
+| --------------- | --------------------------- | ---------------------------- |
+| daily at 2 a.m. | backup user data            | backup                       |
+| daily at 5 a.m. | rescan miniDLNA directories | dlna                         |
+
 ## Port Forwarding
 
 > **_Note:_** Instead of forwarding relevant ports from your router to the NAS, strongly consider using a VPN to avoid any unencrypted file transfer (e.g. Samba) via internet.
