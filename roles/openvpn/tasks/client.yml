@@ -1,0 +1,11 @@
+- name: "generate client certificate for user '{{ openvpn_client.name }}'"
+  expect:
+    command: "{{ easyrsa_exe }} build-client-full {{ openvpn_client.name }} nopass"
+    creates: "{{ openvpn_ca_certificate_folder }}/{{ openvpn_client.name }}.crt"
+    responses:
+      'Enter pass.*': "{{ openvpn.ca_passphrase }}"
+
+- name: generate client configuration
+  template:
+    dest: "{{ openvpn_client_folder }}/client-{{ openvpn_client.name }}.ovpn"
+    src: openvpn/client.conf

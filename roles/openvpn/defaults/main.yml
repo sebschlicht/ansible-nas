@@ -1,7 +1,10 @@
-force_ca_recreation: false
-openvpn_ca_folder: "{{ openvpn.ca_folder | default('/opt/openvpn-ca') }}"
-openvpn_ca_certificate: "{{ openvpn_ca_folder }}/ca.crt"
-openvpn_server_name: "{{ nas.domain | default('server') }}"
-openvpn_server_certificate: "{{ openvpn_ca_folder }}/issued/{{ openvpn_server_name }}.crt"
 easyrsa_folder: "{{ openvpn.easyrsa_folder | default('/usr/share/easy-rsa') }}"
 easyrsa_exe: "{{ easyrsa_folder }}/easyrsa"
+openvpn_ca_force_recreation: no
+openvpn_ca_folder: "{{ openvpn.ca_folder | default('/opt/openvpn-ca') }}"
+openvpn_ca_root_certificate: "{{ openvpn_ca_folder }}/ca.crt"
+openvpn_ca_certificate_folder: "{{ openvpn_ca_folder }}/issued"
+openvpn_ca_certificate_server: "{{ openvpn_ca_certificate_folder }}/{{ openvpn_server_name }}.crt"
+openvpn_server_name: "{{ nas.domain | default('server') }}"
+openvpn_server_folder: '/etc/openvpn/server'
+openvpn_client_folder: '/etc/openvpn/client'

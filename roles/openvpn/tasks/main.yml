@@ -9,12 +9,12 @@
   file:
     path: "{{ openvpn_ca_folder }}"
     state: absent
-  when: force_ca_recreation
+  when: openvpn_ca_force_recreation
 
 - name: configure CA
   template:
     dest: "{{ easyrsa_folder }}/vars"
-    src: "vars"
+    src: "easyrsa/vars"
 
 - name: initialize CA
   command:
@@ -24,7 +24,7 @@
 - name: build CA
   expect:
     command: "{{ easyrsa_exe }} build-ca"
-    creates: "{{ openvpn_ca_certificate }}"
+    creates: "{{ openvpn_ca_root_certificate }}"
     responses:
       'Enter New CA Key Passphrase:': "{{ openvpn.ca_passphrase }}"
       'Re-Enter .*': "{{ openvpn.ca_passphrase }}"
@@ -33,10 +33,64 @@
 - name: create server certificate and key
   expect:
     command: "{{ easyrsa_exe }} build-server-full {{ openvpn_server_name }} nopass"
-    creates: "{{ openvpn_server_certificate }}"
+    creates: "{{ openvpn_ca_certificate_server }}"
     responses:
       'Enter pass .*': "{{ openvpn.ca_passphrase }}"
 
 - name: verify certificate chain
-  command: "openssl verify -CAfile {{ openvpn_ca_certificate }} {{ openvpn_server_certificate }}"
+  command: "openssl verify -CAfile {{ openvpn_ca_root_certificate }} {{ openvpn_ca_certificate_server }}"
   changed_when: no
+
+- name: generate Diffie Hellman key
+  command:
+    cmd: "{{ easyrsa_exe }} gen-dh"
+    creates: "{{ openvpn_ca_folder }}/dh.pem"
+
+- name: generate revocation list
+  expect:
+    command: "{{ easyrsa_exe }} gen-crl"
+    creates: "{{ openvpn_ca_folder }}/crl.pem"
+    responses:
+      'Enter pass.*': "{{ openvpn.ca_passphrase }}"
+
+- name: create client certificates
+  include_tasks: client.yml
+  loop:
+    - { name: 'sebastian' }
+  loop_control:
+    loop_var: openvpn_client
+
+- name: install server files
+  copy:
+    src: "{{ openvpn_ca_folder }}/{{ item }}"
+    dest: "{{ openvpn_server_folder }}"
+    remote_src: yes
+    force: "{{ openvpn_ca_force_recreation }}"
+  loop:
+    - 'ca.crt'
+    - 'crl.pem'
+    - 'dh.pem'
+    - "issued/{{ openvpn_server_name }}.crt"
+    - "private/{{ openvpn_server_name }}.key"
+
+- name: configure
+  template:
+    dest: "{{ openvpn_server_folder }}/{{ openvpn_server_name }}.conf"
+    src: openvpn/server.conf
+
+- name: enable IP forwarding
+  blockinfile:
+    path: /etc/sysctl.conf
+    block: |
+      net.ipv4.ip_forward = 1
+  register: sysctl_config
+
+- name: reload
+  command: "sysctl -p"
+  when: sysctl_config.changed
+
+- name: enable
+  service:
+    name: "openvpn-server@{{ openvpn_server_name }}"
+    state: "{{ openvpn_ca_force_recreation | ternary('restarted', 'started') }}"
+    enabled: yes
