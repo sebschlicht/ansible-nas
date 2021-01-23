@@ -40,6 +40,17 @@ mailing:
   password: "{{ vault_mailing_password }}"
   sender_name: "Pi4 (Koblenz)"
 
+openvpn:
+  ca_passphrase: "{{ vault_openvpn_ca_passphrase }}"
+  vars:
+    name: server
+    country: DE
+    province: RLP
+    city: Koblenz
+    organization: sschlicht.de
+    email_address: pi-ko@sschlicht.de
+    organizational_unit: ko
+
 samba:
   internal_shares:
     - { name: videos, path: "{{ mounts_base_dir }}/primary/videos" }

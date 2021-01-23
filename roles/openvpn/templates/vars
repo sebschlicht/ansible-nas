@@ -1,0 +1,12 @@
+set_var EASYRSA_REQ_COUNTRY "{{ openvpn.vars.country }}"
+set_var EASYRSA_REQ_PROVINCE "{{ openvpn.vars.province }}"
+set_var EASYRSA_REQ_CITY "{{ openvpn.vars.city }}"
+set_var EASYRSA_REQ_ORG "{{ openvpn.vars.organization }}"
+set_var EASYRSA_REQ_EMAIL "{{ openvpn.vars.email_address }}"
+set_var EASYRSA_REQ_OU "{{ openvpn.vars.organizational_unit }}"
+
+set_var EASYRSA_ALGO ec
+set_var EASYRSA_CURVE secp521r1
+
+set_var EASYRSA "{{ easyrsa_folder }}"
+set_var EASYRSA_PKI "{{ openvpn_ca_folder }}"

@@ -1,0 +1,42 @@
+- name: install
+  apt:
+    name:
+      - openvpn
+      - easy-rsa
+    cache_valid_time: 600
+
+- name: remove existing CA
+  file:
+    path: "{{ openvpn_ca_folder }}"
+    state: absent
+  when: force_ca_recreation
+
+- name: configure CA
+  template:
+    dest: "{{ easyrsa_folder }}/vars"
+    src: "vars"
+
+- name: initialize CA
+  command:
+    cmd: "{{ easyrsa_exe }} init-pki"
+    creates: "{{ openvpn_ca_folder }}"
+
+- name: build CA
+  expect:
+    command: "{{ easyrsa_exe }} build-ca"
+    creates: "{{ openvpn_ca_certificate }}"
+    responses:
+      'Enter New CA Key Passphrase:': "{{ openvpn.ca_passphrase }}"
+      'Re-Enter .*': "{{ openvpn.ca_passphrase }}"
+      'Common Name .*': "{{ openvpn_server_name }}"
+
+- name: create server certificate and key
+  expect:
+    command: "{{ easyrsa_exe }} build-server-full {{ openvpn_server_name }} nopass"
+    creates: "{{ openvpn_server_certificate }}"
+    responses:
+      'Enter pass .*': "{{ openvpn.ca_passphrase }}"
+
+- name: verify certificate chain
+  command: "openssl verify -CAfile {{ openvpn_ca_certificate }} {{ openvpn_server_certificate }}"
+  changed_when: no
