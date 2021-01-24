@@ -1,0 +1,26 @@
+- name: create server certificate and key
+  expect:
+    command: "{{ easyrsa_exe }} build-server-full {{ openvpn_server_name }} nopass"
+    creates: "{{ openvpn_ca_certificate_server }}"
+    responses:
+      'Enter pass .*': "{{ openvpn.ca_passphrase }}"
+  register: openvpn_server_certificate_task
+
+- block:
+    - name: verify certificate chain
+      command: "openssl verify -CAfile {{ openvpn_ca_root_certificate }} {{ openvpn_ca_certificate_server }}"
+      changed_when: no
+
+    - name: install server files
+      copy:
+        src: "{{ openvpn_ca_folder }}/{{ item }}"
+        dest: "{{ openvpn_server_folder }}"
+        remote_src: yes
+        force: "{{ openvpn_ca_force_recreation }}"
+      loop:
+        - 'ca.crt'
+        - 'crl.pem'
+        - 'dh.pem'
+        - "issued/{{ openvpn_server_name }}.crt"
+        - "private/{{ openvpn_server_name }}.key"
+  when: openvpn_server_certificate_task.changed

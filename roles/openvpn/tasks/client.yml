@@ -1,11 +1,64 @@
+- set_fact:
+    openvpn_client_key: "{{ openvpn_ca_folder }}/private/{{ openvpn_client.name }}.key"
+    openvpn_client_certificate: "{{ openvpn_ca_certificate_folder }}/{{ openvpn_client.name }}.crt"
+    openvpn_client_provisioning_folder: "/home/{{ openvpn_client.name }}/openvpn-provisioning"
+
 - name: "generate client certificate for user '{{ openvpn_client.name }}'"
   expect:
     command: "{{ easyrsa_exe }} build-client-full {{ openvpn_client.name }} nopass"
-    creates: "{{ openvpn_ca_certificate_folder }}/{{ openvpn_client.name }}.crt"
+    creates: "{{ openvpn_client_certificate }}"
     responses:
       'Enter pass.*': "{{ openvpn.ca_passphrase }}"
+  register: openvpn_client_certificate_task
 
-- name: generate client configuration
-  template:
-    dest: "{{ openvpn_client_folder }}/client-{{ openvpn_client.name }}.ovpn"
-    src: openvpn/client.conf
+- block:
+    - name: verify certificate chain
+      command: "openssl verify -CAfile {{ openvpn_ca_root_certificate }} {{ openvpn_client_certificate }}"
+      changed_when: no
+
+    - name: create client provisioning folder
+      file:
+        path: "{{ openvpn_client_provisioning_folder }}"
+        state: directory
+        owner: "{{ openvpn_client.name }}"
+        group: "{{ openvpn_client.name }}"
+
+    # TODO provision CA files only, move config generation and packaging to openvpn tasks
+    - name: generate client configuration
+      template:
+        dest: "{{ openvpn_client_provisioning_folder }}/{{ openvpn_client.name }}.ovpn"
+        src: openvpn/client.conf
+        owner: "{{ openvpn_client.name }}"
+        group: "{{ openvpn_client.name }}"
+        mode: 0644
+
+    - name: copy certificates
+      copy:
+        src: "{{ item }}"
+        dest: "{{ openvpn_client_provisioning_folder }}"
+        remote_src: yes
+        owner: "{{ openvpn_client.name }}"
+        group: "{{ openvpn_client.name }}"
+        mode: 0644
+      loop:
+        - "{{ openvpn_ca_root_certificate }}"
+        - "{{ openvpn_client_certificate }}"
+
+    - name: create provisioning package
+      archive:
+        path:
+          - "{{ openvpn_client_provisioning_folder }}/*.crt"
+          - "{{ openvpn_client_provisioning_folder }}/*.ovpn"
+        dest: "{{ openvpn_client_provisioning_folder }}/openvn-{{ openvpn_client.name }}.zip"
+        format: zip
+        remove: yes
+
+    - name: provision client key
+      copy:
+        src: "{{ openvpn_client_key }}"
+        dest: "{{ openvpn_client_provisioning_folder }}"
+        remote_src: yes
+        owner: "{{ openvpn_client.name }}"
+        group: "{{ openvpn_client.name }}"
+        mode: 0600
+  when: openvpn_client_certificate_task.changed
