@@ -35,6 +35,11 @@
     responses:
       'Enter pass.*': "{{ openvpn.ca_passphrase }}"
 
+- name: generate shared TLS authentication key
+  command:
+    cmd: "openvpn --genkey --secret {{ openvpn_server_tls_auth_key }}"
+    creates: "{{ openvpn_server_tls_auth_key }}"
+
 - name: create and deploy server certificate
   include_tasks: server.yml
 

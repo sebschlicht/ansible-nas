@@ -6,6 +6,7 @@ openvpn_ca_folder: "{{ openvpn.ca_folder | default('/opt/openvpn-ca') }}"
 openvpn_ca_root_certificate: "{{ openvpn_ca_folder }}/ca.crt"
 openvpn_ca_certificate_folder: "{{ openvpn_ca_folder }}/issued"
 openvpn_ca_certificate_server: "{{ openvpn_ca_certificate_folder }}/{{ openvpn_server_name }}.crt"
+openvpn_server_tls_auth_key: "{{ openvpn_ca_folder }}/ta.key"
 openvpn_server_name: "{{ nas.domain | default('server') }}"
 openvpn_server_folder: '/etc/openvpn/server'
 openvpn_client_folder: '/etc/openvpn/client'

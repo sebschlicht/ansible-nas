@@ -6,21 +6,24 @@
       'Enter pass .*': "{{ openvpn.ca_passphrase }}"
   register: openvpn_server_certificate_task
 
-- block:
-    - name: verify certificate chain
-      command: "openssl verify -CAfile {{ openvpn_ca_root_certificate }} {{ openvpn_ca_certificate_server }}"
-      changed_when: no
-
-    - name: install server files
-      copy:
-        src: "{{ openvpn_ca_folder }}/{{ item }}"
-        dest: "{{ openvpn_server_folder }}"
-        remote_src: yes
-        force: "{{ openvpn_ca_force_recreation }}"
-      loop:
-        - 'ca.crt'
-        - 'crl.pem'
-        - 'dh.pem'
-        - "issued/{{ openvpn_server_name }}.crt"
-        - "private/{{ openvpn_server_name }}.key"
+- name: verify certificate chain
+  command: "openssl verify -CAfile {{ openvpn_ca_root_certificate }} {{ openvpn_ca_certificate_server }}"
+  changed_when: no
   when: openvpn_server_certificate_task.changed
+
+- name: install server files
+  copy:
+    src: "{{ openvpn_ca_folder }}/{{ item.path }}"
+    dest: "{{ openvpn_server_folder }}"
+    remote_src: yes
+    force: yes
+    owner: openvpn
+    group: openvpn
+    mode: "{{ item.mode }}"
+  loop:
+    - { path: 'ca.crt', mode: '644' }
+    - { path: 'crl.pem', mode: '644' }
+    - { path: 'dh.pem', mode: '644' }
+    - { path: 'ta.key', mode: '600' }
+    - { path: "issued/{{ openvpn_server_name }}.crt", mode: '644' }
+    - { path: "private/{{ openvpn_server_name }}.key", mode: '600' }

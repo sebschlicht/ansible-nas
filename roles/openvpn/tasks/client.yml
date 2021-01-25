@@ -43,12 +43,14 @@
       loop:
         - "{{ openvpn_ca_root_certificate }}"
         - "{{ openvpn_client_certificate }}"
+        - "{{ openvpn_server_tls_auth_key }}"
 
     - name: create provisioning package
       archive:
         path:
           - "{{ openvpn_client_provisioning_folder }}/*.crt"
           - "{{ openvpn_client_provisioning_folder }}/*.ovpn"
+          - "{{ openvpn_client_provisioning_folder }}/ta.key"
         dest: "{{ openvpn_client_provisioning_folder }}/openvn-{{ openvpn_client.name }}.zip"
         format: zip
         remove: yes
