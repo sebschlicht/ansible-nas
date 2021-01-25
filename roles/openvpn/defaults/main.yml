@@ -9,4 +9,5 @@ openvpn_ca_certificate_server: "{{ openvpn_ca_certificate_folder }}/{{ openvpn_s
 openvpn_server_tls_auth_key: "{{ openvpn_ca_folder }}/ta.key"
 openvpn_server_name: "{{ nas.domain | default('server') }}"
 openvpn_server_folder: '/etc/openvpn/server'
+openvpn_server_jail: "{{ openvpn_server_folder }}/jail"
 openvpn_client_folder: '/etc/openvpn/client'

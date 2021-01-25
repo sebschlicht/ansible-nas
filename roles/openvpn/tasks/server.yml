@@ -27,3 +27,20 @@
     - { path: 'ta.key', mode: '600' }
     - { path: "issued/{{ openvpn_server_name }}.crt", mode: '644' }
     - { path: "private/{{ openvpn_server_name }}.key", mode: '600' }
+
+- name: create jail
+  file:
+    path: "{{ openvpn_server_jail }}/tmp"
+    state: directory
+    owner: openvpn
+    group: openvpn
+
+- name: copy required files to jail
+  copy:
+    src: "{{ openvpn_server_folder }}/crl.pem"
+    dest: "{{ openvpn_server_jail }}/"
+    remote_src: yes
+    force: yes
+    owner: openvpn
+    group: openvpn
+    mode: preserve
