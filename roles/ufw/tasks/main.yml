@@ -46,9 +46,17 @@
   when: "('cloud' in ansible_run_tags and 'ufw' in ansible_run_tags) or ('all' in ansible_run_tags)"
   register: ufw_http
 
+- name: allow OpenVPN communication
+  ufw:
+    rule: allow
+    proto: udp
+    to_port: '1194'
+  when: "('openvpn' in ansible_run_tags and 'ufw' in ansible_run_tags) or ('all' in ansible_run_tags)"
+  register: ufw_openvpn
+
 - name: enable/reload service
   service:
     name: ufw
-    state: "{{ (ufw_samba.changed or ufw_dlna.changed or ufw_http.changed) | ternary('restarted', omit) }}"
+    state: "{{ (ufw_samba.changed or ufw_dlna.changed or ufw_http.changed or ufw_openvpn.changed) | ternary('restarted', 'started') }}"
     enabled: yes
   when: not running_in_container

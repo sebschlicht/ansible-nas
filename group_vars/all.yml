@@ -41,6 +41,7 @@ mailing:
   sender_name: "Pi4 (Koblenz)"
 
 openvpn:
+  port: 1194
   ca_passphrase: "{{ vault_openvpn_ca_passphrase }}"
   vars:
     name: server
@@ -48,7 +49,7 @@ openvpn:
     province: RLP
     city: Koblenz
     organization: sschlicht.de
-    email_address: pi-ko@sschlicht.de
+    email_address: "{{ mailing.from_address }}"
     organizational_unit: ko
 
 samba:

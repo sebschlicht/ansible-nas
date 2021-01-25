@@ -1,5 +1,6 @@
 easyrsa_folder: "{{ openvpn.easyrsa_folder | default('/usr/share/easy-rsa') }}"
 easyrsa_exe: "{{ easyrsa_folder }}/easyrsa"
+openvpn_port: "{{ openvpn.port | default(1194) }}"
 openvpn_ca_force_recreation: no
 openvpn_ca_folder: "{{ openvpn.ca_folder | default('/opt/openvpn-ca') }}"
 openvpn_ca_root_certificate: "{{ openvpn_ca_folder }}/ca.crt"
