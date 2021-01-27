@@ -1,16 +1,3 @@
-- name: create server certificate and key
-  expect:
-    command: "{{ easyrsa_exe }} build-server-full {{ openvpn_server_name }} nopass"
-    creates: "{{ openvpn_ca_certificate_server }}"
-    responses:
-      'Enter pass .*': "{{ openvpn.ca_passphrase }}"
-  register: openvpn_server_certificate_task
-
-- name: verify certificate chain
-  command: "openssl verify -CAfile {{ openvpn_ca_root_certificate }} {{ openvpn_ca_certificate_server }}"
-  changed_when: no
-  when: openvpn_server_certificate_task.changed
-
 - name: install server files
   copy:
     src: "{{ openvpn_ca_folder }}/{{ item.path }}"
@@ -44,3 +31,15 @@
     owner: openvpn
     group: openvpn
     mode: preserve
+
+- name: configure server
+  template:
+    dest: "{{ openvpn_server_folder }}/{{ openvpn_server_name }}.conf"
+    src: openvpn/server.conf
+  register: openvpn_server_config_task
+
+- name: enable
+  service:
+    name: "openvpn-server@{{ openvpn_server_name }}"
+    state: "{{ (openvpn_server_config_task.changed or openvpn_ca_force_recreation) | ternary('restarted', 'started') }}"
+    enabled: yes

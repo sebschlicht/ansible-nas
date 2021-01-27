@@ -1,0 +1,14 @@
+- set_fact:
+    openvpn_client_key: "{{ openvpn_ca_folder }}/private/{{ openvpn_client.name }}.key"
+    openvpn_client_certificate: "{{ openvpn_ca_certificate_folder }}/{{ openvpn_client.name }}.crt"
+
+- name: "generate client certificate for user '{{ openvpn_client.name }}'"
+  expect:
+    command: "{{ easyrsa_exe }} build-client-full {{ openvpn_client.name }} nopass"
+    creates: "{{ openvpn_client_certificate }}"
+    responses:
+      'Enter pass.*': "{{ openvpn.ca_passphrase }}"
+
+- name: verify certificate chain
+  command: "openssl verify -CAfile {{ openvpn_ca_root_certificate }} {{ openvpn_client_certificate }}"
+  changed_when: no

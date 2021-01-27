@@ -5,20 +5,6 @@
       - easy-rsa
     cache_valid_time: 600
 
-- name: create user and group
-  user:
-    name: openvpn
-    create_home: no
-
-- name: create and deploy certificates via CA
-  include_tasks: ca.yml
-
-- name: configure server
-  template:
-    dest: "{{ openvpn_server_folder }}/{{ openvpn_server_name }}.conf"
-    src: openvpn/server.conf
-  register: openvpn_server_config_task
-
 - name: enable IP forwarding
   blockinfile:
     path: /etc/sysctl.conf
@@ -30,8 +16,19 @@
   command: "sysctl -p"
   when: sysctl_config.changed
 
-- name: enable
-  service:
-    name: "openvpn-server@{{ openvpn_server_name }}"
-    state: "{{ (openvpn_server_config_task.changed or openvpn_ca_force_recreation) | ternary('restarted', 'started') }}"
-    enabled: yes
+- name: create user and group
+  user:
+    name: openvpn
+    create_home: no
+
+- name: create certificates via CA
+  include_tasks: ca.yml
+
+- name: deploy and provision client certificates
+  include_tasks: client.yml
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: openvpn_client
+
+- name: deploy server certificate and configure server
+  include_tasks: server.yml

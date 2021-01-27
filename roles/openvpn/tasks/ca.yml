@@ -40,11 +40,19 @@
     cmd: "openvpn --genkey --secret {{ openvpn_server_tls_auth_key }}"
     creates: "{{ openvpn_server_tls_auth_key }}"
 
-- name: create and deploy server certificate
-  include_tasks: server.yml
+- name: create server certificate and key
+  expect:
+    command: "{{ easyrsa_exe }} build-server-full {{ openvpn_server_name }} nopass"
+    creates: "{{ openvpn_ca_certificate_server }}"
+    responses:
+      'Enter pass .*': "{{ openvpn.ca_passphrase }}"
 
-- name: create and deploy client certificates
-  include_tasks: client.yml
+- name: verify certificate chain
+  command: "openssl verify -CAfile {{ openvpn_ca_root_certificate }} {{ openvpn_ca_certificate_server }}"
+  changed_when: no
+
+- name: create and verify client certificates
+  include_tasks: ca_client.yml
   loop: "{{ users }}"
   loop_control:
     loop_var: openvpn_client
