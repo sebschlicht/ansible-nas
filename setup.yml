@@ -14,6 +14,8 @@
       tags: auto-upgrade
     - role: dynv6
       tags: ddns
+    - role: openvpn
+      tags: openvpn
     - role: samba
       tags: samba
     - role: minidlna
