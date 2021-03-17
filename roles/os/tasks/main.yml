@@ -1,9 +1,12 @@
 - name: create OS users
   user:
+    append: yes
     name: "{{ item.name }}"
     password: "{{ item.initial_password }}"
     groups: "{{ item.groups | default(omit) }}"
   with_items: "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: set hostname
   import_tasks: hostname.yml
