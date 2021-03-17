@@ -52,6 +52,9 @@ minidlna:
   directories:
     - "{{ mounts_base_dir }}/primary/videos"
 
+mumble:
+  password: "{{ vault_mumble_server_password }}"
+
 users:
   - name: sebschlicht
     full_name: Sebastian Schlicht

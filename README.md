@@ -34,6 +34,7 @@ While most configuration options are hard-coded to fit the recommendations for t
 * `dlna`: [DLNA](https://en.wikipedia.org/wiki/Digital_Living_Network_Alliance) server to access stored media files from smartTVs etc.
   * automatically discover and play videos and/or music
   * *unencrypted file transfer*
+* `mumble`: [Mumble](https://www.mumble.info/) server (aka. Murmur) for low-latency voice chats
 * `ddns`: dynamic DNS update client
   * hourly (and on reboot) reports the device's IP address to DynV6, to have it accessible via a domain
 * `auto-upgrade`: keep installed software up-to-date
@@ -105,6 +106,7 @@ You only need to care about the variables of features that you are going to inst
 | samba | `samba.internal_shares` | internal Samba shares, each having a `name` and a `path`, that are accessible with any account
 | samba | `samba.public_shares`   | public Samba shares, each having a `name` and a `path`, that are accessible even without an account
 | dlna  | `minidlna.*`            | `display_name` to be shown in client devices, `directories` to list paths that should be accessible for clients
+| mumble | `mumble.password` | password that is required by clients to connect (may be empty)
 
 ### Vault
 
