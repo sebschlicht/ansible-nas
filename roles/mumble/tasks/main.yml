@@ -1,0 +1,10 @@
+- name: install
+  apt:
+    name: mumble-server
+    cache_valid_time: 600
+
+- name: configure
+  lineinfile:
+    path: "/etc/mumble-server.ini"
+    regexp: "^serverpassword="
+    line: "serverpassword={{ mumble.password }}"

@@ -18,6 +18,8 @@
       tags: samba
     - role: minidlna
       tags: dlna
+    - role: mumble
+      tags: mumble
     - role: nextcloud
       tags: cloud
     - role: ufw
