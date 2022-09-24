@@ -25,7 +25,12 @@
     block: "{{ lookup('template', 'smb.conf.j2') }}"
     validate: testparm -s %s
 
-- name: configure service
+- name: configure firewall
+  ufw:
+    rule: allow
+    name: Samba
+
+- name: enable
   service:
     name: smbd
     state: started

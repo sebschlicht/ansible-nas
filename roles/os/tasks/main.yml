@@ -1,3 +1,26 @@
+- name: create nas user
+  user:
+    name: "{{ nas.user.name }}"
+    password_lock: yes
+    shell: /bin/bash
+
+- name: create SSH directory of nas user
+  file:
+    path: "{{ nas_ssh_dir }}"
+    state: directory
+    owner: "{{ nas.user.name }}"
+    group: "{{ nas.user.name }}"
+    mode: 0700
+
+- name: configure SSH keys of nas user
+  copy:
+    src: "{{ item }}"
+    dest: "{{ nas_ssh_dir }}/"
+    owner: "{{ nas.user.name }}"
+    group: "{{ nas.user.name }}"
+    mode: 0600
+  with_items: "{{ nas.ssh_keys }}"
+
 - name: create OS users
   user:
     append: yes

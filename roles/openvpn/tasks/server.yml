@@ -1,0 +1,51 @@
+- name: create configuration folder
+  file:
+    path: "{{ openvpn_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+
+- name: create client configuration folder
+  file:
+    path: "{{ openvpn_server_client_config_dir }}"
+    state: directory
+
+- name: configure iroute entries
+  copy:
+    dest: "{{ openvpn_server_client_config_dir }}/{{ openvpn_client.common_name }}"
+    content: "iroute {{ openvpn_client.network }} {{ openvpn_client.subnetMask | default('255.255.255.0') }}"
+  with_items: "{{ openvpn.server.client_networks | default([]) }}"
+  loop_control:
+    loop_var: openvpn_client
+
+- name: configure server
+  template:
+    src: "server.conf"
+    dest: "{{ openvpn_config_dir }}/server.conf"
+    group: "{{ openvpn_user }}"
+    mode: 0644
+  register: server_config
+
+- name: copy server files
+  copy:
+    src: "{{ openvpn.files }}/{{ item }}"
+    dest: "{{ openvpn_config_dir }}/"
+    user: "{{ openvpn_user }}"
+    group: "{{ openvpn_user }}"
+    mode: 0600
+  with_items:
+    - ca.crt
+    - server.crt
+  register: server_files
+
+- name: enable and (re)start service
+  service:
+    name: openvpn-server@server.service
+    enabled: yes
+    state: "{{ (server_config.changed or server_files.changed) | ternary('restarted', 'started') }}"
+  register: server_service
+
+- name: suggest port forwarding
+  set_fact:
+    global_suggestions: "{{ global_suggestions | default([]) + [ openvpn_server_suggest_port_forwarding ] }}"
+  when: server_service.changed

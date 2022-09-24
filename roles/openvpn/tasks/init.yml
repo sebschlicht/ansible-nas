@@ -1,0 +1,40 @@
+- name: install
+  apt:
+    name:
+      - openvpn
+      - easy-rsa
+    cache_valid_time: 600
+
+- name: initialize easy-rsa
+  command:
+    cmd: "make-cadir '{{ easyrsa_dir }}'"
+    creates: "{{ easyrsa_dir }}"
+
+- name: initialize PKI
+  command:
+    cmd: "{{ easyrsa_dir }}/easyrsa --pki-dir='{{ easyrsa_pki_dir }}' init-pki"
+    creates: "{{ easyrsa_pki_dir }}"
+
+- name: create certificate request
+  command:
+    cmd: "{{ easyrsa_dir }}/easyrsa --pki-dir='{{ easyrsa_pki_dir }}' --batch gen-req '{{ easyrsa_certificate_id }}' nopass"
+    creates: "{{ easyrsa_certificate_path }}"
+  environment:
+    EASYRSA_REQ_CN: "{{ easyrsa_certificate_id }}-{{ easyrsa_host }}"
+    EASYRSA_BATCH: "yes"
+
+- name: retrieve certificate request
+  fetch:
+    dest: "{{ transit_files_dir }}/requests/{{ easyrsa_host }}/"
+    flat: true
+    src: "{{ easyrsa_certificate_path }}"
+
+- name: initialize server credentials
+  import_tasks: init-server.yml
+  when: openvpn.server is defined
+
+- name: copy private key
+  copy:
+    src: "{{ easyrsa_pki_dir }}/private/{{ easyrsa_certificate_id }}.key"
+    dest: "{{ openvpn_config_dir }}/"
+    remote_src: yes

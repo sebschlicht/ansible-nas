@@ -6,17 +6,19 @@
       - bsd-mailx
     cache_valid_time: 600
 
-- name: configure
+- name: configure msmtp
   template:
     src: "msmtprc.j2"
     dest: /etc/msmtprc
     owner: root
-    mode: 0600
+    group: msmtp
+    mode: 0640
 
-- name: set alias
+- name: set mail alias
   lineinfile:
     path: /etc/aliases
     line: "root:{{ mailing_from }}"
+    create: yes
   register: alias
 
 - name: set root name (mail sender)

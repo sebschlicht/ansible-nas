@@ -1,0 +1,72 @@
+# remote user to login to and use for the setup process (must exist on the device)
+setup_user: sebschlicht
+
+nas:
+  user:
+    # name of the system NAS user (e.g. used for service tasks) to be created
+    name: nas
+  # desired hostname of the NAS
+  hostname: pi
+  # path to store all NAS data
+  path: /mnt/nas-storage
+  # public domain to access the machine
+  domain: "{{ vault_nas_domain }}"
+  # path to store the user data
+  userdata_path: "/mnt/nas-storage/userdata"
+  # mount an external storage device to the NAS data path to store all data on it
+  mount:
+    # UUID of the external storage device
+    uuid: 4C1E05C31E05A6D4
+    # file system type (see fstab for valid options)
+    fstype: ntfs-3g
+    # mount options (see fstab for valid options)
+    opts: defaults,windows_names,permissions,nofail,x-systemd.device-timeout=30,locale=de_DE.utf8
+  # paths (relative to `files` folder) to private SSH keys to be copied to the NAS
+  ssh_keys:
+    - ko/id_nas_koblenz
+  # authorized public keys for SSH access to the NAS user
+  authorized_keys:
+    - ko/id_nas_bendorf.pub
+
+openvpn:
+  # path (relative to the `files` folder) for OpenVPN files of this machine
+  files: ko/openvpn
+  server:
+    # OpenVPN declaration (network, port)
+    network: 192.168.1.0
+    port: 11194
+    # OpenVPN client network declaration (name, network, submask)
+    client_networks:
+      - common_name: client-bendorf
+        network: 192.168.178.0
+        subnetMask: 255.255.255.0
+
+backup:
+  # path to be backed up
+  source_directory: "{{ nas.path }}"
+  # path to the local restic repository
+  local_repository: /mnt/nas-backup/backups/koblenz
+  # paths to local copies of remote backups
+  local_foreign_repositories:
+    - /mnt/nas-backup/backups/bendorf
+  mount:
+    # mount path of the external storage device to store backups 
+    path: /mnt/nas-backup
+    # UUID of the external storage device
+    uuid: 2604C61626F2DB4E
+    # optional: file system (fstype) and mount options (opts); see fstab for possible values
+  # host of the remote restic repository (i.e. backup copy) 
+  remote_host: 192.168.178.3
+  # URI to the remote restic repository
+  remote_repository: "sftp:{{ nas.user.name }}@192.168.178.3:/mnt/nas-backup/backups/koblenz"
+  # name of the public key for SSH access to the remote restic repository ho
+  remote_ssh_key_id: id_nas_koblenz
+
+mailing_sender_name: "Pi (Koblenz)"
+
+minidlna:
+  # server name shown on client devices
+  display_name: SchlichtNAS (KO)
+  # paths accessible to clients
+  directories:
+    - "{{ nas.path }}/videos"

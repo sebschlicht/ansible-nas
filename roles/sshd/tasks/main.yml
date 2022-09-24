@@ -1,4 +1,12 @@
-- name: "copy SSH keys"
+- name: register SSH key of linked realms
+  include_tasks: ssh_id_copy.yml
+  vars:
+    user:
+      name: "{{ nas.user.name }}"
+      authorized_keys:
+        - "{{ nas.authorized_keys }}"
+
+- name: register SSH keys of users
   include_tasks: ssh_id_copy.yml
   with_items: "{{ users }}"
   loop_control:

@@ -7,14 +7,26 @@
   blockinfile:
     path: /etc/minidlna.conf
     block: "{{ lookup('template', 'minidlna.conf.j2') }}"
+  register: minidlna_config
 
 - name: add miniDLNA user to NAS group
   user:
     name: minidlna
     groups: "{{ nas.user.name }}"
 
-- name: start
+- name: configure firewall
+  ufw:
+    rule: allow
+    proto: "{{ item.proto }}"
+    to_port: "{{ item.to_port }}"
+  with_items:
+    - to_port: 8200
+      proto: tcp
+    - to_port: 1900
+      proto: udp
+
+- name: enable
   service:
     name: minidlna
-    state: started
+    state: "{{ minidlna_config.changed | ternary('restarted', 'started') }}"
     enabled: yes

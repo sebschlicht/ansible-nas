@@ -1,4 +1,11 @@
 /*.retry
 /.vault_pass
 
+# default certificate authority location
+/ca/
+# files in transit to/from the certificate authority
+/files-ca-transit/
+# sensitive files distributed to OpenVPN clients
+/files/*/openvpn/ta.key
+
 /wiki

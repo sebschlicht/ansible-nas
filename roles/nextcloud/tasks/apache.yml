@@ -30,3 +30,9 @@
     name: apache2
     state: restarted
   when: place_apache_sites.changed or apache_default_sites.changed
+
+- name: configure firewall
+  ufw:
+    rule: allow
+    proto: tcp
+    to_port: 80,443
