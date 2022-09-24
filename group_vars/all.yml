@@ -1,72 +1,72 @@
-mounts_base_dir: /mnt/nas
-backup_location: "{{ mounts_base_dir }}/primary/backup"
+# metadata to exclude steps in certain scenarios
 running_in_container: no
 uninstall: no
 
 nextcloud:
   version: 20.0.0
   path: /var/www/nextcloud
-  data_path: "{{ mounts_base_dir }}/primary/nextcloud/data"
+  data_path: "{{ nas.path }}/nextcloud/data"
 
 dynv6:
-  token: "{{ vault_dynv6_token }}"
+  # token to update the current IP address of the NAS domain on DynV6
+  password: "{{ vault_dynv6_password }}"
 
+nas_ssh_dir: "/home/{{ nas.user.name }}/.ssh"
 sshd:
+  # users allowed to SSH into the NAS, in addition to the individual users
   allow_additional_users:
     - "{{ setup_user }}"
-
+    - "{{ nas.user.name }}"
+  # enable password-based authentication (strongly discouraged, specify authorized keys per user instead)
+  enable_password_authentication: no
 
 server_locales:
   - de_DE.UTF-8
 server_timezone: Europe/Berlin
 
-setup_user: sebschlicht
-nas:
-  hostname: pi
-  domain: koblenz.dns.sschlicht.de
-  user:
-    name: pi
-
-mounts:
-  primary:
-    uuid: 18A302FC66F67B28
-
-mail_recipient: pimon@sschlicht.de
+# recipient for administrator mails (e.g. performed upgrades)
+mail_recipient: "{{ vault_mail_recipient_address }}"
 mailing:
+  # mail server connection details
   server: mx2f3e.netcup.net
   port: 465
-  user: pi-ko@sschlicht.de
-  from_address: pi-ko@sschlicht.de
+  # mail server credentials
+  user: "{{ vault_mailing_sender_address }}"
   password: "{{ vault_mailing_password }}"
-  sender_name: "Pi4 (Koblenz)"
+  # custom address / sender name to be used when sending mails
+  from_address: "{{ vault_mailing_sender_address }}"
+  sender_name: "{{ mailing_sender_name }}"
 
 samba:
+  # shares accesible with any account, each having `name` and `path`
   internal_shares:
-    - { name: videos, path: "{{ mounts_base_dir }}/primary/videos" }
-    - { name: secdev, path: "{{ mounts_base_dir }}/primary/secdev" }
+    - { name: videos, path: "{{ nas.path }}/videos" }
+    - { name: secdev, path: "{{ nas.path }}/secdev" }
+  # shares accessible with and without an account
   public_shares:
-    - { name: software, path: "{{ mounts_base_dir }}/primary/software" }
-
-minidlna:
-  display_name: SchlichtNAS
-  directories:
-    - "{{ mounts_base_dir }}/primary/videos"
+    - { name: software, path: "{{ nas.path }}/software" }
 
 mumble:
+  # password required by clients to connect (may be empty)
   password: "{{ vault_mumble_server_password }}"
 
+# OS users for individuals
 users:
   - name: sebschlicht
     full_name: Sebastian Schlicht
     mail_address: "{{ vault_sebschlicht_mail_address }}"
+    # name of the backup folder (defaults to username)
     backup_folder_name: sebastian
+    # hash of the initial password
     initial_password: $6$bvWKhsKfYQL8FH$FBXZZLp2ylLIEFjpj6c7vq.pCaJCH3nn3daYG3kEAhfhOxPoE6Y1kIux9VAiTQ8m1BPbmdYQ7OnCJNgm8h9VE1
+    # additional group assignments
     groups: sudo
     samba_password: "{{ vault_sebschlicht_smbpasswd }}"
     nextcloud_user: sebastian
     nextcloud_password: "{{ vault_sebschlicht_nextcloud_password }}"
     authorized_keys:
       - id_sebschlicht.pub
+      - id_sebschlicht_mobile.pub
       - id_pi_windows.pub
   - name: isspek
     full_name: Ipek Baris Schlicht
@@ -82,3 +82,5 @@ users:
     initial_password: $6$IieSj6WUcNC$Hlw.UkdS0fqoCaGibNLUCp5sCGm/Jb9KSBWOqtyq6QY.rEPuG5sZyjcYeVqQ0IVdssrUqHK4xgteW3f12S9Fa1
     samba_password: "{{ vault_mas_smbpasswd }}"
     nextcloud_password: "{{ vault_mas_nextcloud_password }}"
+    authorized_keys:
+      - id_maspc.pub

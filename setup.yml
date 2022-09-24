@@ -6,14 +6,26 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   roles:
+    - role: os
+      tags: os
+    - role: sshd
+      tags: sshd
+    - role: ufw
+      tags: ufw
     - role: mount
       tags: mount
-    - role: backups
-      tags: always
+    - role: userdata
+      tags: userdata
+    - role: restic
+      tags: backup
     - role: auto-upgrade
       tags: auto-upgrade
     - role: dynv6
       tags: ddns
+    - role: openvpn-init
+      tags: openvpn-init
+    - role: openvpn
+      tags: openvpn-config
     - role: samba
       tags: samba
     - role: minidlna
@@ -22,5 +34,5 @@
       tags: mumble
     - role: nextcloud
       tags: cloud
-    - role: ufw
-      tags: ufw
+    - role: aftercare
+      tags: always

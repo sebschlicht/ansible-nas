@@ -1,0 +1,6 @@
+Host {{ restic_ssh_config_entry }}
+  Hostname {{ backup.remote_host }}
+  User {{ nas.user.name }}
+  PubKeyAuthentication yes
+  IdentityFile {{ nas_ssh_dir }}/{{ backup.remote_ssh_key_id }}
+  IdentitiesOnly yes

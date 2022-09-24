@@ -1,0 +1,22 @@
+- name: create user
+  user:
+    name: "{{ openvpn_user }}"
+    home: /nonexistent
+    create_home: no
+    shell: /usr/sbin/nologin
+
+- name: prepare to run OpenVPN as root
+  blockinfile:
+    path: /etc/sudoers
+    block: |
+      openvpn ALL=(root) NOPASSWD: /usr/sbin/openvpn
+    validate: visudo -cf %s
+    marker: "# [ANSIBLE] {mark} grant NAS to run openvpn as root"
+
+- name: setup server
+  import_tasks: server.yml
+  when: openvpn.server is defined
+
+- name: setup client
+  import_tasks: client.yml
+  when: openvpn.client is defined

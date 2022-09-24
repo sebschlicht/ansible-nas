@@ -1,0 +1,4 @@
+- name: import OpenVPN initialization tasks
+  import_role:
+    name: openvpn
+    tasks_from: init.yml

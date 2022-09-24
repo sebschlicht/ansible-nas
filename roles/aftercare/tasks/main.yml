@@ -1,0 +1,7 @@
+- name: words of advice
+  debug:
+    msg: "{{ item }}"
+  with_items: "{{ global_suggestions }}"
+  loop_control:
+    label: "see below"
+  when: global_suggestions is defined

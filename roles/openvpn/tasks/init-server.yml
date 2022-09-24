@@ -1,0 +1,17 @@
+- name: generate DH key
+  command:
+    cmd: "openssl dhparam -out '{{ openvpn_server_dh_key_path }}' 2048"
+    creates: "{{ openvpn_server_dh_key_path }}"
+  async: 600
+  poll: 5
+
+- name: generate TLS key
+  command:
+    cmd: openvpn --genkey --secret '{{ openvpn_server_ta_key_path }}'
+    creates: "{{ openvpn_server_ta_key_path }}"
+
+- name: retrieve TLS key for redistribution
+  fetch:
+    dest: "{{ transit_files_dir }}/to-clients/"
+    flat: yes
+    src: "{{ openvpn_server_ta_key_path }}"

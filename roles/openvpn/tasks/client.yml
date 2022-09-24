@@ -1,0 +1,33 @@
+- name: create configuration folder
+  file:
+    path: "{{ openvpn_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+
+- name: configure client
+  template:
+    src: "client.conf"
+    dest: "{{ openvpn_config_dir }}/client.conf"
+    mode: 0644
+    group: "{{ openvpn_user }}"
+  register: client_config
+
+- name: copy client files
+  copy:
+    src: "{{ openvpn.files }}/{{ item }}"
+    dest: "{{ openvpn_config_dir }}/"
+    owner: "{{ openvpn_user }}"
+    group: "{{ openvpn_user }}"
+    mode: 0600
+  with_items:
+    - ca.crt
+    - ta.key
+    - client.crt
+  register: client_files
+
+- name: enable and start service
+  service:
+    name: openvpn-client@client.service
+    enabled: yes
+    state: "{{ (client_config.changed or client_files.changed) | ternary('restarted', 'started') }}"

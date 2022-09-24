@@ -1,14 +1,13 @@
-- name: prepare base mount point
-  file:
-    path: "{{ mounts_base_dir }}"
-    state: directory
-    owner: "{{ nas.user.name }}"
-    group: "{{ nas.user.name }}"
-    mode: "{{ mount_directory_mode }}"
-
-- name: mount external storages
+- name: mount external storage for NAS
   include_tasks: mount.yml
-  with_dict: "{{ mounts }}"
-  loop_control:
-    loop_var: mount
-  when: mounts is defined
+  vars:
+    mount: "{{ nas.mount }}"
+    mountpoint: "{{ nas.mount.path | default(nas.path) }}"
+  when: nas.mount is defined
+
+- name: mount external backup storage for NAS
+  include_tasks: mount.yml
+  vars:
+    mount: "{{ backup.mount }}"
+    mountpoint: "{{ backup.mount.path }}"
+  when: backup.mount is defined

@@ -1,0 +1,44 @@
+setup_user: sebschlicht
+
+nas:
+  user:
+    name: nas
+  hostname: pi
+  path: /mnt/nas-storage
+  domain: "{{ vault_nas_domain }}"
+  userdata_path: "/mnt/nas-storage/userdata"
+  mount:
+    uuid: 4C1E05C31E05A6D4
+  ssh_keys:
+    - ko/id_nas_koblenz
+  authorized_keys:
+    - ko/id_nas_bendorf.pub
+
+openvpn:
+  files: ko/openvpn
+  server:
+    network: 192.168.1.0
+    port: 11194
+    client_networks:
+      - common_name: client-bendorf
+        network: 192.168.178.0
+        subnetMask: 255.255.255.0
+
+backup:
+  source_directory: "{{ nas.path }}"
+  local_repository: /mnt/nas-backup/backups/koblenz
+  local_foreign_repositories:
+    - /mnt/nas-backup/backups/bendorf
+  mount:
+    path: /mnt/nas-backup
+    uuid: 2604C61626F2DB4E
+  remote_host: 192.168.178.3
+  remote_repository: "sftp:{{ nas.user.name }}@192.168.178.3:/mnt/nas-backup/backups/koblenz"
+  remote_ssh_key_id: id_nas_koblenz
+
+mailing_sender_name: "Pi (Koblenz)"
+
+minidlna:
+  display_name: SchlichtNAS (KO)
+  directories:
+    - "{{ nas.path }}/videos"

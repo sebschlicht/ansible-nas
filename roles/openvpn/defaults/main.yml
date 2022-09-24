@@ -1,0 +1,15 @@
+easyrsa_dir: /etc/easy-rsa
+easyrsa_pki_dir: "{{ easyrsa_dir }}/pki"
+easyrsa_host: "{{ ansible_inventory_sources | first | regex_search('[^/]+$') }}"
+easyrsa_certificate_id: "{{ (openvpn.client is defined) | ternary('client', 'server') }}"
+easyrsa_certificate_path: "{{ easyrsa_pki_dir }}/reqs/{{ easyrsa_certificate_id }}.req"
+
+transit_files_dir: "files-ca-transit"
+
+openvpn_user: openvpn
+openvpn_config_dir: "/etc/openvpn/{{ easyrsa_certificate_id }}"
+openvpn_server_ta_key_path: "{{ openvpn_config_dir }}/ta.key"
+openvpn_server_dh_key_path: "{{ openvpn_config_dir }}/dh2048.pem"
+openvpn_server_client_config_dir: "{{ openvpn_config_dir }}/ccd"
+openvpn_server_suggest_port_forwarding: |
+  [OpenVPN] The OpenVPN server is now running. Don't forget to configure a port forwarding from your router to the OpenVPN server, on port {{ openvpn.server.port }}.

@@ -1,0 +1,9 @@
+restic_repository_password: "{{ vault_restic_repository_password }}"
+restic_config_dir: "/home/{{ nas.user.name }}/.config/restic"
+restic_password_file_path: "{{ restic_config_dir }}/password"
+
+restic_wrapper_log_dir: /var/log/restic
+restic_wrapper_script_dir: "/home/{{ nas.user.name }}/scripts"
+restic_wrapper_script_path: "{{ restic_wrapper_script_dir }}/restic-wrapper.sh"
+
+restic_ssh_config_entry: restic.remote

@@ -1,0 +1,23 @@
+- name: create userdata location
+  file:
+    path: "{{ nas.userdata_path }}"
+    state: directory
+    owner: "{{ nas.user.name }}"
+    group: "{{ nas.user.name }}"
+    mode: "{{ nas_userdata_base_directory_mode }}"
+    force: yes
+  tags: nas
+
+- name: create a directory for each user and enforce secure permissions
+  file:
+    path: "{{ nas.userdata_path }}/{{ user.backup_folder_name | default(user.name) }}"
+    state: directory
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: "{{ nas_userdata_directory_mode }}"
+    force: yes
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: user
+    label: "{{ user.name }}"
+  tags: nas

@@ -1,15 +1,17 @@
-- name: copy script
-  template:
-    src: dynv6.sh.j2
-    dest: /usr/local/bin/dynv6
-    mode: 0755
+- name: install ddclient
+  apt:
+    name:
+      - ddclient
+    cache_valid_time: 600
 
-- name: register cron jobs
-  cron:
-    name: "dynv6 ({{ item }})"
-    job: "dynv6 {{ dynv6.hostname | default(nas.domain) }}"
-    special_time: "{{ item }}"
-    user: "{{ nas.user.name }}"
-  loop:
-    - hourly
-    - reboot
+- name: configure ddclient
+  copy:
+    dest: /etc/ddclient.conf
+    content: |
+      protocol=dyndns2
+      use=web, web=checkip.dyndns.com, web-skip='IP Address'
+      server=dynv6.com
+      ssl=yes
+      login=none
+      password='{{ dynv6.password }}'
+      {{ nas.domain }}
