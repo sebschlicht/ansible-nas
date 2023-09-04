@@ -33,6 +33,7 @@ LOCAL_BACKUP_FAILED='[ERR] Backup failed'
 INTEGRITY_LOSS='[ERR] Backup integrity failure'
 PUSHING_BACKUP_FAILED='[WARN] Creating a copy of the backup failed'
 BACKUP_SUCCEEDED='[INFO] Backup created'
+SFTP_COMMAND="ssh -F '{{ nas_ssh_dir }}/config' {{ restic_ssh_config_entry }} -s sftp"
 
 # Prints the usage of the script in case of using the help command.
 printUsage() {
@@ -172,7 +173,7 @@ fc_unlock_repository() {
 fc_init_repository() {
   if ! fc_unlock_repository "$1"; then
     fc_info "Initializing repository '$1'."
-    restic init -o sftp.command="ssh {{ restic_ssh_config_entry }} -s sftp" -r "$1" -p "$PASSWORD_FILE"
+    restic init -o sftp.command="$SFTP_COMMAND" -r "$1" -p "$PASSWORD_FILE"
   fi
 }
 fc_init_local_repository() {
@@ -207,7 +208,7 @@ fc_check_local_repository() {
 }
 fc_push_local_backups_to_remote() {
   fc_info "Pushing the backup to '$REMOTE_REPOSITORY'."
-  if ! restic copy -o sftp.command="ssh {{ restic_ssh_config_entry }} -s sftp" -q -r "$REMOTE_REPOSITORY" -p "$PASSWORD_FILE" --from-repo "$LOCAL_REPOSITORY" --from-password-file "$PASSWORD_FILE"; then
+  if ! restic copy -o sftp.command="$SFTP_COMMAND" -q -r "$REMOTE_REPOSITORY" -p "$PASSWORD_FILE" --from-repo "$LOCAL_REPOSITORY" --from-password-file "$PASSWORD_FILE"; then
     fc_notify "$PUSHING_BACKUP_FAILED" "Pushing the local backups of '$LOCAL_REPOSITORY' to '$REMOTE_REPOSITORY' failed!"
     return 1
   fi
