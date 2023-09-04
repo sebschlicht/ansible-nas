@@ -6,4 +6,4 @@ restic_wrapper_log_dir: /var/log/restic
 restic_wrapper_script_dir: "/home/{{ nas.user.name }}/scripts"
 restic_wrapper_script_path: "{{ restic_wrapper_script_dir }}/restic-wrapper.sh"
 
-restic_ssh_config_entry: restic.remote
+restic_ssh_config_entry: restic-remote
