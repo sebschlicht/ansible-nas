@@ -24,6 +24,7 @@ LOG_FILE_DIR=.
 LOCAL_REPOSITORY=
 REMOTE_REPOSITORY=
 PASSWORD_FILE=
+EXCLUDE_FILE=/dev/null
 NOTIFICATION_ADDRESS=
 
 ###################
@@ -103,6 +104,11 @@ parseArguments() {
     -p | --password-file)
       shift
       PASSWORD_FILE="$1"
+      ;;
+    # exclude file
+    -e | --exclude-file)
+      shift
+      EXCLUDE_FILE="$1"
       ;;
     # log file directory
     -l | --log-file-dir)
@@ -192,7 +198,7 @@ fc_init_remote_repository() {
 fc_create_local_backup() {
   local rc=0
   fc_info "Backing up '$BACKUP_SOURCE_DIR' to repository '$LOCAL_REPOSITORY'."
-  if ! sudo restic backup -r "$LOCAL_REPOSITORY" -p "$PASSWORD_FILE" "$BACKUP_SOURCE_DIR"; then
+  if ! sudo restic backup -r "$LOCAL_REPOSITORY" -p "$PASSWORD_FILE" --exclude-file "$EXCLUDE_FILE" "$BACKUP_SOURCE_DIR"; then
     rc=1
     fc_notify "$LOCAL_BACKUP_FAILED" "Creating the local backup for '$BACKUP_SOURCE_DIR' failed!"
   fi

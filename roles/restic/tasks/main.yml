@@ -16,6 +16,14 @@
     owner: "{{ nas.user.name }}"
     group: "{{ nas.user.name }}"
 
+- name: template exclude file
+  template:
+    dest: "{{ restic_exclude_file_path }}"
+    group: "{{ nas.user.name }}"
+    mode: '0644'
+    owner: "{{ nas.user.name }}"
+    src: "exclude.txt"
+
 - name: store restic password
   copy:
     content: "{{ restic_repository_password }}"
@@ -83,7 +91,7 @@
 - name: schedule restic backup
   cron:
     name: "backup NAS"
-    job: "{{ restic_wrapper_script_path }} -u '{{ nas.user.name }}' -p '{{ restic_password_file_path }}' -r '{{ backup.local_repository }}' -b '{{ backup.remote_repository }}' -l '{{ restic_wrapper_log_dir }}' -m '{{ mail_recipient }}' {{ backup.source_directory }}"
+    job: "{{ restic_wrapper_script_path }} -u '{{ nas.user.name }}' -p '{{ restic_password_file_path }}' -e '{{ restic_exclude_file_path }}' -r '{{ backup.local_repository }}' -b '{{ backup.remote_repository }}' -l '{{ restic_wrapper_log_dir }}' -m '{{ mail_recipient }}' {{ backup.source_directory }}"
     user: "{{ nas.user.name }}"
     minute: "0"
     hour: "2"
